@@ -1,5 +1,5 @@
 {
-  "name": "node-react-fullstack-starter",
+  "name": "local-library",
   "version": "0.0.1",
   "description": "library management system with node and react",
   "main": "server/index.js",
@@ -19,6 +19,7 @@
   "author": "Naren Lama",
   "license": "MIT",
   "dependencies": {
+    "async": "^2.6.1",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
