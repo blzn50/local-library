@@ -7,7 +7,9 @@ const mongoose = require('mongoose');
 
 const keys = require('../config/keys');
 
+// Routes
 const usersRouter = require('./routes/users');
+const catalogRouter = require('./routes/catalog');
 
 const app = express();
 
@@ -18,16 +20,18 @@ mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(helmet());
 app.use(express.static('dist'));
 
 app.use('/users', usersRouter);
+app.use('/catalog', catalogRouter);
 
-app.use('/api', (req, res) => {
-  res.send({ data: 'from server' });
-});
+// app.use('/', (req, res) => {
+//   res.redirect('/catalog');
+// });
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
