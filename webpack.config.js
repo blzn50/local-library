@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const outputDirectory = 'dist';
-const VENDOR_LIBS = ['react', 'react-dom'];
+const VENDOR_LIBS = ['react', 'react-dom', 'react-router-dom', 'bootstrap'];
 
 module.exports = {
   entry: {

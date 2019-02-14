@@ -9,6 +9,7 @@
     "react/prefer-stateless-function": false,
     "react/jsx-filename-extension": false,
     "linebreak-style": "off",
-    "prefer-destructuring": "warn"
+    "prefer-destructuring": "warn",
+    "react/jsx-one-expression-per-line": false
   }
 }
