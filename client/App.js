@@ -1,4 +1,15 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import Sidebar from './components/Sidebar';
+import Home from './components/Home';
+import Books from './components/Books';
+import Authors from './components/Authors';
+import Genres from './components/Genres';
+import BookInstances from './components/BookInstances';
+import BookCreate from './components/BookCreate';
+import GenreCreate from './components/GenreCreate';
+import AuthorCreate from './components/AuthorCreate';
+import BookInstanceCreate from './components/BookInstanceCreate';
 
 class App extends Component {
   state = { data: null };
@@ -10,12 +21,28 @@ class App extends Component {
   }
 
   render() {
-    const { data } = this.state;
     return (
-      <div>
-
-        some text
-        <p>{data}</p>
+      <div className="container-fluid">
+        <BrowserRouter>
+          <div className="row">
+            <div className="col-sm-2">
+              <Sidebar />
+            </div>
+            <div className="col-sm-10">
+              <Switch>
+                <Route exact path="/" component={Home} />
+                <Route path="/books" component={Books} />
+                <Route path="/authors" component={Authors} />
+                <Route path="/genres" component={Genres} />
+                <Route path="/bookinstances" component={BookInstances} />
+                <Route path="/book/create" component={BookCreate} />
+                <Route path="/author/create" component={AuthorCreate} />
+                <Route path="/genre/create" component={GenreCreate} />
+                <Route path="/bookinstance/create" component={BookInstanceCreate} />
+              </Switch>
+            </div>
+          </div>
+        </BrowserRouter>
       </div>
     );
   }
