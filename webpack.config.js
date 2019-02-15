@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const outputDirectory = 'dist';
-const VENDOR_LIBS = ['react', 'react-dom', 'react-router-dom', 'bootstrap'];
+const VENDOR_LIBS = ['react', 'react-dom', 'react-router-dom'];
 
 module.exports = {
   entry: {
@@ -35,6 +35,7 @@ module.exports = {
   devServer: {
     port: 3000,
     // open: true,
+    historyApiFallback: true,
     proxy: {
       '/catalog': 'http://localhost:5000',
       '/users': 'http://localhost:5000',

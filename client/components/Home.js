@@ -15,8 +15,7 @@ class Home extends Component {
 
   render() {
     const { title, data, error } = this.state;
-    console.log('error: ', error);
-    console.log(data);
+
     return (
       <div>
         <h1>Welcome to {title}!!!</h1>

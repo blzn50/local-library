@@ -15,5 +15,8 @@ BookSchema.virtual('url').get(function () {
   return `/catalog/book/${this._id}`;
 });
 
+BookSchema.set('toObject', { virtuals: true });
+BookSchema.set('toJSON', { virtuals: true });
+
 // Export model
 module.exports = mongoose.model('Book', BookSchema);

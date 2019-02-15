@@ -31,7 +31,7 @@ const Sidebar = () => (
         <Link to="/genre/create">Create new genre</Link>
       </li>
       <li>
-        <Link to="/bookinstance/create">Create new book instance</Link>
+        <Link to="/bookinstance/create">Create new book instance (copy)</Link>
       </li>
     </ul>
   </aside>
