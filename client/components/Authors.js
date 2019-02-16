@@ -26,8 +26,6 @@ class Authors extends Component {
             data.map(author => (
               <li>
                 <Link to={author.url}>{author.name}</Link> ({author.lifespan})
-                {/* ({author.dateOfBirth}) - (
-                {author.dateOfDeath}) */}
               </li>
             ))
           ) : (

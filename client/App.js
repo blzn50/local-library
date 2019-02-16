@@ -33,7 +33,7 @@ class App extends Component {
                 <Route exact path="/" component={Home} />
                 <Route path="/books" component={Books} />
                 <Route path="/authors" component={Authors} />
-                {/* <Route path="/genres" component={Genres} /> */}
+                <Route path="/genres" component={Genres} />
                 <Route path="/bookinstances" component={BookInstances} />
                 {/* <Route path="/book/create" component={BookCreate} />
                 <Route path="/author/create" component={AuthorCreate} />
