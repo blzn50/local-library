@@ -1,7 +1,12 @@
 const Author = require('../models/author');
 
-const author_list = (req, res) => {
-  res.send('TO BE IMPLEMENTED: Author list');
+const author_list = (req, res, next) => {
+  Author.find()
+    .sort({ lastName: 1 })
+    .exec((err, authorsList) => {
+      if (err) return next(err);
+      res.send({ title: 'Author List', data: authorsList });
+    });
 };
 
 const author_detail = (req, res) => {
