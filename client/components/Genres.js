@@ -24,7 +24,7 @@ class Genres extends Component {
         <ul>
           {data.length > 0 ? (
             data.map(genre => (
-              <li>
+              <li key={genre._id}>
                 <Link to={genre.url}>{genre.name}</Link>
               </li>
             ))

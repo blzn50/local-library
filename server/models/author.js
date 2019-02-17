@@ -30,7 +30,7 @@ AuthorSchema.virtual('lifespan').get(function () {
 
 // eslint-disable-next-line func-names
 AuthorSchema.virtual('url').get(function () {
-  return `/catalog/author/${this._id}`;
+  return `/author/${this._id}`;
 });
 
 AuthorSchema.set('toObject', { virtuals: true });
