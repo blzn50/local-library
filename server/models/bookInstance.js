@@ -21,7 +21,7 @@ BookInstanceSchema.virtual('url').get(function () {
 });
 
 BookInstanceSchema.virtual('dueBackFormatted').get(function () {
-  return moment(this.dueBack).format('Do MMMM, YYYY');
+  return moment(this.dueBack).format('DD MMMM, YYYY');
 });
 
 BookInstanceSchema.set('toObject', { virtuals: true });

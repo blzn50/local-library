@@ -13,6 +13,7 @@ import AuthorCreate from './components/AuthorCreate';
 import BookInstanceCreate from './components/BookInstanceCreate';
 import GenreDetail from './components/GenreDetail';
 import AuthorDetail from './components/AuthorDetail';
+import BookInstanceDetail from './components/BookInstanceDetail';
 
 class App extends Component {
   state = { data: null };
@@ -41,6 +42,7 @@ class App extends Component {
                 <Route path="/genres" component={Genres} />
                 <Route path="/genre/:id" component={GenreDetail} />
                 <Route path="/bookinstances" component={BookInstances} />
+                <Route path="/bookinstance/:id" component={BookInstanceDetail} />
                 {/* <Route path="/book/create" component={BookCreate} />
                 <Route path="/author/create" component={AuthorCreate} />
                 <Route path="/genre/create" component={GenreCreate} />
