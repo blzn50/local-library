@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Home from './components/Home';
 import Books from './components/Books';
+import BookDetail from './components/BookDetail';
 import Authors from './components/Authors';
 import Genres from './components/Genres';
 import BookInstances from './components/BookInstances';
@@ -33,6 +34,7 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route path="/books" component={Books} />
+                <Route path="/book/:id" component={BookDetail} />
                 <Route path="/authors" component={Authors} />
                 <Route path="/genres" component={Genres} />
                 <Route path="/genre/:id" component={GenreDetail} />
