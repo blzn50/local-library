@@ -24,7 +24,7 @@ class Authors extends Component {
         <ul>
           {data.length > 0 ? (
             data.map(author => (
-              <li>
+              <li key={author._id}>
                 <Link to={author.url}>{author.name}</Link> ({author.lifespan})
               </li>
             ))

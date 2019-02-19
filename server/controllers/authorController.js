@@ -1,4 +1,6 @@
+const async = require('async');
 const Author = require('../models/author');
+const Book = require('../models/book');
 
 const author_list = (req, res, next) => {
   Author.find()
@@ -9,8 +11,30 @@ const author_list = (req, res, next) => {
     });
 };
 
-const author_detail = (req, res) => {
-  res.send(`TO BE IMPLEMENTED: Author detail ${req.params.id}`);
+const author_detail = (req, res, next) => {
+  async.parallel(
+    {
+      author: (cb) => {
+        Author.findById(req.params.id).exec(cb);
+      },
+      authorsBook: (cb) => {
+        Book.find({ author: req.params.id }, 'title summary').exec(cb);
+      },
+    },
+    (err, results) => {
+      if (err) return next(err);
+      if (results.author === null) {
+        const error = new Error('Author not found');
+        error.status = 404;
+        return next(error);
+      }
+      return res.send({
+        title: 'Author Detail',
+        author: results.author,
+        authorsBook: results.authorsBook,
+      });
+    },
+  );
 };
 
 const author_create_get = (req, res) => {
