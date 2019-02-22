@@ -40,12 +40,12 @@ class App extends Component {
                 <Route path="/authors" component={Authors} />
                 <Route path="/author/:id" component={AuthorDetail} />
                 <Route path="/genres" component={Genres} />
+                <Route path="/genre/create" component={GenreCreate} />
                 <Route path="/genre/:id" component={GenreDetail} />
                 <Route path="/bookinstances" component={BookInstances} />
                 <Route path="/bookinstance/:id" component={BookInstanceDetail} />
                 {/* <Route path="/book/create" component={BookCreate} />
                 <Route path="/author/create" component={AuthorCreate} />
-                <Route path="/genre/create" component={GenreCreate} />
                 <Route path="/bookinstance/create" component={BookInstanceCreate} /> */}
               </Switch>
             </div>
