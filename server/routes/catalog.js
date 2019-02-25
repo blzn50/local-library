@@ -13,9 +13,6 @@ const bookInstanceController = require('../controllers/bookInstanceController');
 // GET catalog home page.
 router.get('/', bookController.index);
 
-// GET request for creating a Book. NOTE This must come before routes that display Book (uses id).
-router.get('/book/create', bookController.book_create_get);
-
 // POST request for creating Book.
 router.post('/book/create', bookController.book_create_post);
 
@@ -38,9 +35,6 @@ router.get('/book/:id', bookController.book_detail);
 router.get('/books', bookController.book_list);
 
 // / AUTHOR ROUTES ///
-
-// GET request for creating Author. NOTE This must come before route for id (i.e. display author).
-router.get('/author/create', authorController.author_create_get);
 
 // POST request for creating Author.
 router.post('/author/create', authorController.author_create_post);
@@ -91,10 +85,7 @@ router.get('/genres', genreController.genre_list);
 
 // / BOOKINSTANCE ROUTES ///
 
-// GET request for creating a BookInstance.
 // NOTE This must come before route that displays BookInstance (uses id).
-router.get('/bookinstance/create', bookInstanceController.bookinstance_create_get);
-
 // POST request for creating BookInstance.
 router.post('/bookinstance/create', bookInstanceController.bookinstance_create_post);
 
