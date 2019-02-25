@@ -13,6 +13,8 @@ const bookInstanceController = require('../controllers/bookInstanceController');
 // GET catalog home page.
 router.get('/', bookController.index);
 
+router.get('/book/create', bookController.book_create_get);
+
 // POST request for creating Book.
 router.post('/book/create', bookController.book_create_post);
 

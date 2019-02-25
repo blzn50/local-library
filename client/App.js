@@ -36,6 +36,7 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route path="/books" component={Books} />
+                <Route path="/book/create" component={BookCreate} />
                 <Route path="/book/:id" component={BookDetail} />
                 <Route path="/authors" component={Authors} />
                 <Route path="/author/create" component={AuthorCreate} />
@@ -45,7 +46,7 @@ class App extends Component {
                 <Route path="/genre/:id" component={GenreDetail} />
                 <Route path="/bookinstances" component={BookInstances} />
                 <Route path="/bookinstance/:id" component={BookInstanceDetail} />
-                {/* <Route path="/book/create" component={BookCreate} />
+                {/*
                 <Route path="/bookinstance/create" component={BookInstanceCreate} /> */}
               </Switch>
             </div>
