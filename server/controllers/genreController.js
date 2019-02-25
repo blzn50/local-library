@@ -49,7 +49,7 @@ exports.genre_detail = (req, res, next) => {
 // Handle Genre create on POST.
 exports.genre_create_post = [
   body('name', 'Genre name required')
-    .isLength({ min: 1 })
+    .isLength({ min: 2 })
     .trim(),
 
   sanitizeBody('name')
@@ -62,17 +62,19 @@ exports.genre_create_post = [
     const genre = new Genre({ name: rawGenre });
 
     if (!errors.isEmpty()) {
-      res.send({ genre, errors: errors.array() });
+      res.send({ errors: errors.array() });
       return;
     }
-    Genre.findOne({ name: req.body.name }).exec((err, foundGenre) => {
+    Genre.findOne({ name: rawGenre }).exec((err, foundGenre) => {
       if (err) return next(err);
-      if (foundGenre) return res.send({ foundGenreUrl: foundGenre.url });
-
-      return genre.save((error) => {
-        if (error) return next(error);
-        return res.send({ genreUrl: genre.url });
-      });
+      if (foundGenre) {
+        res.send({ url: foundGenre.url });
+      } else {
+        return genre.save((error) => {
+          if (error) return next(error);
+          return res.send({ url: genre.url });
+        });
+      }
     });
   },
 ];

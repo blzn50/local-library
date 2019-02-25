@@ -1,21 +1,21 @@
 import React, { Component, Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+import { Alert } from 'reactstrap';
+import './genreCreate.scss';
 
 class GenreCreate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
+      error: [],
+      isOpen: true,
     };
     this.genreRef = React.createRef();
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(e.target[0]);
-    console.log(this.genreRef.current.value);
     const d = this.genreRef.current.value;
-    // const b = e.target[0];
 
     fetch('/catalog/genre/create', {
       method: 'POST',
@@ -27,11 +27,30 @@ class GenreCreate extends Component {
       }),
     })
       .then(res => res.json())
-      .then(data => console.log(data));
+      .then((data) => {
+        if (data.errors) {
+          this.setState({
+            error: data.errors,
+          });
+        }
+        if (data.url && window) {
+          window.location.href = data.url;
+        }
+      });
+  };
+
+  handleDismiss = () => {
+    this.setState({ isOpen: false, error: [] }, () => {
+      this.resetState();
+    });
+  };
+
+  resetState = () => {
+    this.setState({ isOpen: true });
   };
 
   render() {
-    const { genreValue } = this.state;
+    const { error, isOpen } = this.state;
     return (
       <div>
         <h1>Create Genre</h1>
@@ -46,6 +65,7 @@ class GenreCreate extends Component {
                 className="form-control"
                 placeholder="Fantasy, Poetry etc."
                 ref={this.genreRef}
+                required
               />
             </label>
           </div>
@@ -53,6 +73,20 @@ class GenreCreate extends Component {
             Submit
           </button>
         </form>
+        <ul className="list-group" style={{ position: 'relative' }}>
+          {error.length > 0
+            && error.map(err => (
+              <Alert
+                isOpen={isOpen}
+                toggle={this.handleDismiss}
+                className="error-msg"
+                color="danger"
+                key={err.msg}
+              >
+                {err.msg}
+              </Alert>
+            ))}
+        </ul>
       </div>
     );
   }
