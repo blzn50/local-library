@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert } from 'reactstrap';
+import { Alert, CustomInput } from 'reactstrap';
 
 class BookCreate extends Component {
   constructor(props) {
@@ -7,6 +7,7 @@ class BookCreate extends Component {
     this.state = {
       authors: [],
       genres: [],
+      checked: [],
     };
   }
 
@@ -19,13 +20,54 @@ class BookCreate extends Component {
       }));
   }
 
+  handleCheck = (e) => {
+    const tempArr = this.state.checked.slice();
+    if (tempArr.length < 1) {
+      tempArr.push(e.target.value);
+    } else {
+      for (const a in tempArr) {
+        if (e.target.value !== a) {
+          tempArr.push(a);
+        } else {
+          tempArr.pop(a);
+        }
+      }
+    }
+    this.setState({
+      checked: tempArr,
+    });
+    console.log(this.state.checked);
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    // console.log(e.target[0].value);
+    // console.log(e.target[1].value);
+    // console.log(e.target[2].value);
+    // console.log(e.target[3].value);
+    console.log(e.target);
+    fetch('/catalog/book/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: e.target[0].value,
+        author: e.target[1].value,
+        summary: e.target[2].value,
+        isbn: e.target[3].value,
+        genre: [],
+      }),
+    });
+  };
+
   render() {
-    const { authors, genres } = this.state;
+    const { authors, genres, checked } = this.state;
     return (
       <div>
         <h1>Book Create</h1>
 
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label htmlFor="title">Title:</label>
             <input
@@ -47,6 +89,48 @@ class BookCreate extends Component {
               ))}
             </select>
           </div>
+          <div className="form-group">
+            <label htmlFor="summary">Summary:</label>
+            <input
+              type="textarea"
+              className="form-control"
+              id="summary"
+              name="summary"
+              placeholder="Summary"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="isbn">ISBN:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="isbn"
+              name="isbn"
+              placeholder="ISBN13"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="genre">Genre:</label>
+            <div>
+              {genres.map(genre => (
+                <CustomInput
+                  key={genre._id}
+                  inline
+                  readOnly
+                  type="checkbox"
+                  id={genre._id}
+                  name="genre"
+                  value={genre._id}
+                  label={genre.name}
+                  // checked={checked}
+                  onClick={this.handleCheck}
+                />
+              ))}
+            </div>
+          </div>
+          <button className="btn btn-primary" type="submit">
+            Submit
+          </button>
         </form>
       </div>
     );
