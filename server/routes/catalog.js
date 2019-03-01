@@ -88,6 +88,8 @@ router.get('/genres', genreController.genre_list);
 // / BOOKINSTANCE ROUTES ///
 
 // NOTE This must come before route that displays BookInstance (uses id).
+router.get('/bookinstance/create', bookInstanceController.bookinstance_create_get);
+
 // POST request for creating BookInstance.
 router.post('/bookinstance/create', bookInstanceController.bookinstance_create_post);
 

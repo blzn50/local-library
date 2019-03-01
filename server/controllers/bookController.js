@@ -129,25 +129,7 @@ exports.book_create_post = [
     });
 
     if (!errors.isEmpty()) {
-      /* async.parallel(
-        {
-          authors: (cb) => {
-            Author.find(cb);
-          },
-          genres: (cb) => {
-            Genre.find(cb);
-          },
-        },
-        (err, results) => {
-          if (err) return next(err);
-          for (let i = 0; i < results.genres.length; i++) {
-            if (book.genre.indexOf(results.genres[i]._id) > -1) {
-              results.genres[i].checked = 'true';
-            }
-          } */
       res.send({ errors: errors.array() });
-      //   },
-      // );
     } else {
       book.save((err) => {
         if (err) return next(err);

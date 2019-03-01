@@ -45,9 +45,8 @@ class App extends Component {
                 <Route path="/genre/create" component={GenreCreate} />
                 <Route path="/genre/:id" component={GenreDetail} />
                 <Route path="/bookinstances" component={BookInstances} />
+                <Route path="/bookinstance/create" component={BookInstanceCreate} />
                 <Route path="/bookinstance/:id" component={BookInstanceDetail} />
-                {/*
-                <Route path="/bookinstance/create" component={BookInstanceCreate} /> */}
               </Switch>
             </div>
           </div>
