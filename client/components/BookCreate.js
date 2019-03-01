@@ -8,6 +8,8 @@ class BookCreate extends Component {
       authors: [],
       genres: [],
       checked: [],
+      errors: [],
+      isOpen: true,
     };
   }
 
@@ -21,31 +23,28 @@ class BookCreate extends Component {
   }
 
   handleCheck = (e) => {
-    const tempArr = this.state.checked.slice();
+    const { checked } = this.state;
+    const fromChecked = e.target.value;
+    const tempArr = checked.slice();
+
     if (tempArr.length < 1) {
       tempArr.push(e.target.value);
     } else {
-      for (const a in tempArr) {
-        if (e.target.value !== a) {
-          tempArr.push(a);
-        } else {
-          tempArr.pop(a);
-        }
+      const indexOfVal = tempArr.indexOf(fromChecked);
+      if (indexOfVal !== -1) {
+        tempArr.splice(indexOfVal, 1);
+      } else {
+        tempArr.push(fromChecked);
       }
     }
     this.setState({
       checked: tempArr,
     });
-    console.log(this.state.checked);
   };
 
   handleSubmit = (e) => {
+    const { checked } = this.state;
     e.preventDefault();
-    // console.log(e.target[0].value);
-    // console.log(e.target[1].value);
-    // console.log(e.target[2].value);
-    // console.log(e.target[3].value);
-    console.log(e.target);
     fetch('/catalog/book/create', {
       method: 'POST',
       headers: {
@@ -56,13 +55,35 @@ class BookCreate extends Component {
         author: e.target[1].value,
         summary: e.target[2].value,
         isbn: e.target[3].value,
-        genre: [],
+        genre: checked,
       }),
+    })
+      .then(res => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.errors) {
+          this.setState({ errors: data.errors });
+        }
+        if (data.url && window) {
+          window.location.href = data.url;
+        }
+      });
+  };
+
+  handleDismiss = () => {
+    this.setState({ isOpen: false, errors: [] }, () => {
+      this.resetState();
     });
   };
 
+  resetState = () => {
+    this.setState({ isOpen: true });
+  };
+
   render() {
-    const { authors, genres, checked } = this.state;
+    const {
+      authors, genres, errors, isOpen,
+    } = this.state;
     return (
       <div>
         <h1>Book Create</h1>
@@ -132,6 +153,20 @@ class BookCreate extends Component {
             Submit
           </button>
         </form>
+        <ul className="list-group" style={{ position: 'relative' }}>
+          {errors.length > 0
+            && errors.map(err => (
+              <Alert
+                isOpen={isOpen}
+                toggle={this.handleDismiss}
+                color="danger"
+                className=""
+                key={err.msg}
+              >
+                {err.msg}
+              </Alert>
+            ))}
+        </ul>
       </div>
     );
   }
