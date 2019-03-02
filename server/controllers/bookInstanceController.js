@@ -37,7 +37,47 @@ exports.bookinstance_create_get = (req, res, next) => {
 };
 
 // Handle BookInstance create on POST.
-exports.bookinstance_create_post = (req, res, next) => {};
+exports.bookinstance_create_post = [
+  body('book', 'Book must be specified')
+    .isLength({ min: 1 })
+    .trim(),
+  body('imprint', 'Imprint must be specified')
+    .isLength({ min: 5 })
+    .trim(),
+  body('dueBack', 'Invalid date')
+    .optional({ checkFalsy: true })
+    .isISO8601(),
+
+  sanitizeBody('book')
+    .trim()
+    .escape(),
+  sanitizeBody('imprint')
+    .trim()
+    .escape(),
+  sanitizeBody('status')
+    .trim()
+    .escape(),
+  sanitizeBody('dueBack').toDate(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    const bookInstance = new BookInstance({
+      book: req.body.book,
+      imprint: req.body.imprint,
+      status: req.body.status,
+      dueBack: req.body.dueBack,
+    });
+
+    if (!errors.isEmpty()) {
+      res.send({ errors: errors.array() });
+    } else {
+      bookInstance.save((err) => {
+        if (err) return next(err);
+        return res.send({ url: bookInstance.url });
+      });
+    }
+  },
+];
 
 // Display BookInstance delete form on GET.
 exports.bookinstance_delete_get = (req, res) => {

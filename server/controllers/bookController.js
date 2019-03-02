@@ -44,7 +44,6 @@ exports.book_list = (req, res, next) => {
 
 // Display detail page for a specific book.
 exports.book_detail = (req, res, next) => {
-  console.log('is the request coming here?');
   async.parallel(
     {
       book: (cb) => {
@@ -121,11 +120,11 @@ exports.book_create_post = [
     const errors = validationResult(req);
 
     const book = new Book({
-      title: '',
-      author: '',
-      summary: '',
-      isbn: '',
-      genre: [],
+      title: capitalizeFirstLetter(req.body.title),
+      author: req.body.author,
+      summary: req.body.summary,
+      isbn: req.body.isbn,
+      genre: req.body.genre,
     });
 
     if (!errors.isEmpty()) {
