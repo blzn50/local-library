@@ -42,10 +42,10 @@ router.get('/books', bookController.book_list);
 router.post('/author/create', authorController.author_create_post);
 
 // GET request to delete Author.
-router.get('/author/:id/delete', authorController.author_delete_get);
+// router.get('/author/:id/delete', authorController.author_delete_get);
 
 // POST request to delete Author.
-router.post('/author/:id/delete', authorController.author_delete_post);
+router.delete('/author/:id/delete', authorController.author_delete_post);
 
 // GET request to update Author.
 router.get('/author/:id/update', authorController.author_update_get);

@@ -98,12 +98,47 @@ const author_update_post = (req, res) => {
   res.send('TO BE IMPLEMENTED: Author update_post');
 };
 
-const author_delete_get = (req, res) => {
-  res.send('TO BE IMPLEMENTED: Author delete_get');
-};
+// const author_delete_get = (req, res, next) => {
+//   async.parallel(
+//     {
+//       author: (cb) => {
+//         Author.findById(req.params.id).exec(cb);
+//       },
+//       authorsBooks: (cb) => {
+//         Book.find({ author: req.params.id }).exec(cb);
+//       },
+//     },
+//     (err, results) => {
+//       if (err) return next(err);
+//       if (results.author === null) {
+//         res.send({ url: '/authors' });
+//       }
+//       return res.send({ author: results.author, authorsBooks: results.authorsBooks });
+//     },
+//   );
+// };
 
-const author_delete_post = (req, res) => {
-  res.send('TO BE IMPLEMENTED: Author delete_post');
+const author_delete_post = (req, res, next) => {
+  async.parallel(
+    {
+      author: (cb) => {
+        Author.findById(req.body.authorid).exec(cb);
+      },
+      authorsBooks: (cb) => {
+        Book.find({ author: req.body.authorid }).exec(cb);
+      },
+    },
+    (err, results) => {
+      if (err) return next(err);
+      if (results.authorsBooks.length > 0) {
+        return res.send({ author: results.author, authorsBooks: results.authorsBooks });
+      }
+      return Author.findByIdAndDelete(req.body.authorid, (error) => {
+        if (error) return next(error);
+        return res.send({ url: '/authors' });
+      });
+    },
+  );
 };
 
 module.exports = {
@@ -112,6 +147,5 @@ module.exports = {
   author_create_post,
   author_update_get,
   author_update_post,
-  author_delete_get,
   author_delete_post,
 };
