@@ -19,10 +19,10 @@ router.get('/book/create', bookController.book_create_get);
 router.post('/book/create', bookController.book_create_post);
 
 // GET request to delete Book.
-router.get('/book/:id/delete', bookController.book_delete_get);
+// router.get('/book/:id/delete', bookController.book_delete_get);
 
 // POST request to delete Book.
-router.post('/book/:id/delete', bookController.book_delete_post);
+router.delete('/book/:id/delete', bookController.book_delete_post);
 
 // GET request to update Book.
 router.get('/book/:id/update', bookController.book_update_get);

@@ -139,13 +139,32 @@ exports.book_create_post = [
 ];
 
 // Display book delete form on GET.
-exports.book_delete_get = (req, res) => {
-  res.send('NOT IMPLEMENTED: Book delete GET');
-};
+// exports.book_delete_get = (req, res) => {
+//   res.send('NOT IMPLEMENTED: Book delete GET');
+// };
 
 // Handle book delete on POST.
-exports.book_delete_post = (req, res) => {
-  res.send('NOT IMPLEMENTED: Book delete POST');
+exports.book_delete_post = (req, res, next) => {
+  async.parallel(
+    {
+      book: (cb) => {
+        Book.findById(req.body.bookid).exec(cb);
+      },
+      bookInstance: (cb) => {
+        BookInstance.find({ book: req.body.bookid }).exec(cb);
+      },
+    },
+    (err, results) => {
+      if (err) return next(err);
+      if (results.bookInstance.length > 0) {
+        return res.send({ bookInstance: results.bookInstance });
+      }
+      return Book.findByIdAndDelete(req.body.bookid, (error) => {
+        if (error) return next(error);
+        return res.send({ url: '/books' });
+      });
+    },
+  );
 };
 
 // Display book update form on GET.
