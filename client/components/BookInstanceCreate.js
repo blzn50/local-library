@@ -46,7 +46,7 @@ class BookInstanceCreate extends Component {
     return (
       <div>
         <h1>Book Instance Create</h1>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} style={{ maxWidth: '600px' }}>
           <div className="form-group">
             <label htmlFor="book">Book:</label>
             <select

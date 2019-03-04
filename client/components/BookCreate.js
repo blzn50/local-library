@@ -88,7 +88,7 @@ class BookCreate extends Component {
       <div>
         <h1>Book Create</h1>
 
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} style={{ maxWidth: '600px' }}>
           <div className="form-group">
             <label htmlFor="title">Title:</label>
             <input

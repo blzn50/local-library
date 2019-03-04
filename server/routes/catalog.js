@@ -68,10 +68,10 @@ router.get('/authors', authorController.author_list);
 router.post('/genre/create', genreController.genre_create_post);
 
 // GET request to delete Genre.
-router.get('/genre/:id/delete', genreController.genre_delete_get);
+// router.get('/genre/:id/delete', genreController.genre_delete_get);
 
 // POST request to delete Genre.
-router.post('/genre/:id/delete', genreController.genre_delete_post);
+router.delete('/genre/:id/delete', genreController.genre_delete_post);
 
 // GET request to update Genre.
 router.get('/genre/:id/update', genreController.genre_update_get);
@@ -94,10 +94,10 @@ router.get('/bookinstance/create', bookInstanceController.bookinstance_create_ge
 router.post('/bookinstance/create', bookInstanceController.bookinstance_create_post);
 
 // GET request to delete BookInstance.
-router.get('/bookinstance/:id/delete', bookInstanceController.bookinstance_delete_get);
+// router.get('/bookinstance/:id/delete', bookInstanceController.bookinstance_delete_get);
 
 // POST request to delete BookInstance.
-router.post('/bookinstance/:id/delete', bookInstanceController.bookinstance_delete_post);
+router.delete('/bookinstance/:id/delete', bookInstanceController.bookinstance_delete_post);
 
 // GET request to update BookInstance.
 router.get('/bookinstance/:id/update', bookInstanceController.bookinstance_update_get);
