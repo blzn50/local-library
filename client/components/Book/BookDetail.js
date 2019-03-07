@@ -185,9 +185,15 @@ class BookDetail extends Component {
         </div>
 
         <div className="float-right">
-          <button onClick={this.toggleModal} type="button" className="btn btn-success mr-3">
+          <Link
+            to={{
+              pathname: '/book/book-form',
+              book,
+            }}
+            className="btn btn-success mr-3"
+          >
             Edit
-          </button>
+          </Link>
           <button onClick={this.toggleModal} type="button" className="btn btn-danger">
             Delete
           </button>

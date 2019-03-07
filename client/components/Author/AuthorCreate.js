@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Alert } from 'reactstrap';
-import './genreCreate.scss';
+import '../Genre/genreCreate.scss';
 
 class AuthorCreate extends Component {
   constructor(props) {

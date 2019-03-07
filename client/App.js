@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Home from './components/Home';
-import Books from './components/Books';
-import BookDetail from './components/BookDetail';
-import Authors from './components/Authors';
-import Genres from './components/Genres';
-import BookInstances from './components/BookInstances';
-import BookCreate from './components/BookCreate';
-import GenreCreate from './components/GenreCreate';
-import AuthorCreate from './components/AuthorCreate';
-import BookInstanceCreate from './components/BookInstanceCreate';
-import GenreDetail from './components/GenreDetail';
-import AuthorDetail from './components/AuthorDetail';
-import BookInstanceDetail from './components/BookInstanceDetail';
+import Authors from './components/Author/Authors';
+import AuthorCreate from './components/Author/AuthorCreate';
+import AuthorDetail from './components/Author/AuthorDetail';
+import Books from './components/Book/Books';
+import BookCreate from './components/Book/BookCreate';
+import BookDetail from './components/Book/BookDetail';
+import BookInstances from './components/BookInstance/BookInstances';
+import BookInstanceCreate from './components/BookInstance/BookInstanceCreate';
+import BookInstanceDetail from './components/BookInstance/BookInstanceDetail';
+import Genres from './components/Genre/Genres';
+import GenreCreate from './components/Genre/GenreCreate';
+import GenreDetail from './components/Genre/GenreDetail';
 
 class App extends Component {
   state = { data: null };
@@ -36,16 +36,16 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route path="/books" component={Books} />
-                <Route path="/book/create" component={BookCreate} />
+                <Route path="/book/book-form" component={BookCreate} />
                 <Route path="/book/:id" component={BookDetail} />
                 <Route path="/authors" component={Authors} />
-                <Route path="/author/create" component={AuthorCreate} />
+                <Route path="/author/author-form" component={AuthorCreate} />
                 <Route path="/author/:id" component={AuthorDetail} />
                 <Route path="/genres" component={Genres} />
-                <Route path="/genre/create" component={GenreCreate} />
+                <Route path="/genre/genre-form" component={GenreCreate} />
                 <Route path="/genre/:id" component={GenreDetail} />
                 <Route path="/bookinstances" component={BookInstances} />
-                <Route path="/bookinstance/create" component={BookInstanceCreate} />
+                <Route path="/bookinstance/bookinstance-form" component={BookInstanceCreate} />
                 <Route path="/bookinstance/:id" component={BookInstanceDetail} />
               </Switch>
             </div>

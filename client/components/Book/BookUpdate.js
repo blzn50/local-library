@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import { Alert, CustomInput } from 'reactstrap';
 
-class BookCreate extends Component {
+class BookUpdate extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,7 +15,7 @@ class BookCreate extends Component {
   }
 
   componentDidMount() {
-    fetch('/catalog/book/create')
+    fetch(`/catalog${this.props.location.pathname}`)
       .then(res => res.json())
       .then(data => this.setState({
         authors: data.authors,
@@ -22,71 +23,10 @@ class BookCreate extends Component {
       }));
   }
 
-  handleCheck = (e) => {
-    const { checked } = this.state;
-    const fromChecked = e.target.value;
-    const tempArr = checked.slice();
-
-    if (tempArr.length < 1) {
-      tempArr.push(e.target.value);
-    } else {
-      const indexOfVal = tempArr.indexOf(fromChecked);
-      if (indexOfVal !== -1) {
-        tempArr.splice(indexOfVal, 1);
-      } else {
-        tempArr.push(fromChecked);
-      }
-    }
-    this.setState({
-      checked: tempArr,
-    });
-  };
-
-  handleSubmit = (e) => {
-    const { checked } = this.state;
-    e.preventDefault();
-    fetch('/catalog/book/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title: e.target[0].value,
-        author: e.target[1].value,
-        summary: e.target[2].value,
-        isbn: e.target[3].value,
-        genre: checked,
-      }),
-    })
-      .then(res => res.json())
-      .then((data) => {
-        console.log(data);
-        if (data.errors) {
-          this.setState({ errors: data.errors });
-        }
-        if (data.url && window) {
-          window.location.href = data.url;
-        }
-      });
-  };
-
-  handleDismiss = () => {
-    this.setState({ isOpen: false, errors: [] }, () => {
-      this.resetState();
-    });
-  };
-
-  resetState = () => {
-    this.setState({ isOpen: true });
-  };
-
   render() {
-    const {
-      authors, genres, errors, isOpen,
-    } = this.state;
     return (
       <div>
-        <h1>Book Create</h1>
+        <h1>Book Update</h1>
 
         <form onSubmit={this.handleSubmit} style={{ maxWidth: '600px' }}>
           <div className="form-group">
@@ -172,4 +112,4 @@ class BookCreate extends Component {
   }
 }
 
-export default BookCreate;
+export default BookUpdate;

@@ -22,16 +22,16 @@ const Sidebar = () => (
       </li>
       <hr />
       <li>
-        <Link to="/book/create">Create new book</Link>
+        <Link to="/book/book-form">Create new book</Link>
       </li>
       <li>
-        <Link to="/author/create">Create new author</Link>
+        <Link to="/author/author-form">Create new author</Link>
       </li>
       <li>
-        <Link to="/genre/create">Create new genre</Link>
+        <Link to="/genre/genre-form">Create new genre</Link>
       </li>
       <li>
-        <Link to="/bookinstance/create">Create new book instance (copy)</Link>
+        <Link to="/bookinstance/bookinstance-form">Create new book instance (copy)</Link>
       </li>
     </ul>
   </aside>
