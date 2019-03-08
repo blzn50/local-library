@@ -35,7 +35,6 @@ exports.genre_detail = (req, res, next) => {
         return next(error);
       }
       return res.send({
-        title: 'Genre Detail',
         genre: results.genre,
         genreBooks: results.genreBooks,
       });

@@ -57,7 +57,7 @@ class AuthorCreate extends Component {
     const { isOpen, error } = this.state;
     return (
       <div>
-        <h1>Create Author</h1>
+        <h1>Author Form</h1>
 
         <form style={{ maxWidth: '500px' }} onSubmit={this.handleSubmit}>
           <div className="form-group">

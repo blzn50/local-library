@@ -6,7 +6,6 @@ import {
 
 class GenreDetail extends Component {
   state = {
-    title: '',
     genre: '',
     genreBooks: [],
     modalData: [],
@@ -17,7 +16,6 @@ class GenreDetail extends Component {
     fetch(`/catalog${this.props.location.pathname}`)
       .then(res => res.json())
       .then(data => this.setState({
-        title: data.title,
         genre: data.genre,
         genreBooks: data.genreBooks,
       }));
@@ -100,38 +98,52 @@ class GenreDetail extends Component {
   };
 
   render() {
-    const { title, genre, genreBooks } = this.state;
+    const {  genre, genreBooks } = this.state;
     return (
       <div>
-        <h1>Genre: {genre.name}</h1>
-        <div style={{ marginLeft: '20px', marginTop: '20px' }}>
-          <h4>Books</h4>
-          <dl>
-            {genreBooks.length > 0 ? (
-              genreBooks.map(genreBook => (
-                <Fragment key={genreBook._id}>
-                  <dt>
-                    <Link to={genreBook.url}>{genreBook.title}</Link>
-                  </dt>
-                  <dd>{genreBook.summary}</dd>
-                </Fragment>
-              ))
-            ) : (
-              <p>This genre has no books</p>
-            )}
-          </dl>
-        </div>
+        {genre === '' ? (
+          <div className="text-center">
+            <div
+              style={{ width: '3em', height: '3em' }}
+              className="mt-5 spinner-border text-secondary"
+              role="status"
+            >
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        ) : (
+          <Fragment>
+            <h1>Genre: {genre.name}</h1>
+            <div style={{ marginLeft: '20px', marginTop: '20px' }}>
+              <h4>Books</h4>
+              <dl>
+                {genreBooks.length > 0 ? (
+                  genreBooks.map(genreBook => (
+                    <Fragment key={genreBook._id}>
+                      <dt>
+                        <Link to={genreBook.url}>{genreBook.title}</Link>
+                      </dt>
+                      <dd>{genreBook.summary}</dd>
+                    </Fragment>
+                  ))
+                ) : (
+                  <p>This genre has no books</p>
+                )}
+              </dl>
+            </div>
 
-        <div className="float-right">
-          <button onClick={this.toggleModal} type="button" className="btn btn-success mr-3">
-            Edit
-          </button>
-          <button onClick={this.toggleModal} type="button" className="btn btn-danger">
-            Delete
-          </button>
-        </div>
+            <div className="float-right">
+              <button onClick={this.toggleModal} type="button" className="btn btn-success mr-3">
+                Edit
+              </button>
+              <button onClick={this.toggleModal} type="button" className="btn btn-danger">
+                Delete
+              </button>
+            </div>
 
-        {this.renderModal()}
+            {this.renderModal()}
+          </Fragment>
+        )}
       </div>
     );
   }

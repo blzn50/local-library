@@ -45,7 +45,7 @@ class BookInstanceCreate extends Component {
     const { bookList, errors } = this.state;
     return (
       <div>
-        <h1>Book Instance Create</h1>
+        <h1>Book Instance Form</h1>
         <form onSubmit={this.handleSubmit} style={{ maxWidth: '600px' }}>
           <div className="form-group">
             <label htmlFor="book">Book:</label>

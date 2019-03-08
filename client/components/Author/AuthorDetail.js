@@ -1,12 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Button, Modal, ModalHeader, ModalBody, ModalFooter,
+  Button, Modal, ModalHeader, ModalBody, ModalFooter, Spinner,
 } from 'reactstrap';
 
 class AuthorDetail extends Component {
   state = {
-    title: '',
     author: '',
     authorsBook: [],
     modalData: [],
@@ -17,7 +16,6 @@ class AuthorDetail extends Component {
     fetch(`/catalog${this.props.location.pathname}`)
       .then(res => res.json())
       .then(data => this.setState({
-        title: data.title,
         author: data.author,
         authorsBook: data.authorsBook,
       }));
@@ -101,40 +99,48 @@ class AuthorDetail extends Component {
   };
 
   render() {
-    const { title, author, authorsBook } = this.state;
+    const { author, authorsBook } = this.state;
     return (
       <div>
-        <h1>Author: {author.name}</h1>
-        <p>{author.lifespan}</p>
+        {author === '' ? (
+          <div style={{ margin: '100px auto', width: '200px' }}>
+            <Spinner style={{ width: '40px', height: '40px' }} color="secondary" />
+          </div>
+        ) : (
+          <Fragment>
+            <h1>Author: {author.name}</h1>
+            <p>{author.lifespan}</p>
 
-        <div style={{ marginLeft: '20px', marginTop: '20px' }}>
-          <h4>Books</h4>
-          <dl>
-            {authorsBook.length > 0 ? (
-              authorsBook.map(book => (
-                <Fragment key={book._id}>
-                  <dt>
-                    <Link to={book.url}>{book.title}</Link>
-                  </dt>
-                  <dd>{book.summary}</dd>
-                </Fragment>
-              ))
-            ) : (
-              <p>This author has no books in our library</p>
-            )}
-          </dl>
-        </div>
+            <div style={{ marginLeft: '20px', marginTop: '20px' }}>
+              <h4>Books</h4>
+              <dl>
+                {authorsBook.length > 0 ? (
+                  authorsBook.map(book => (
+                    <Fragment key={book._id}>
+                      <dt>
+                        <Link to={book.url}>{book.title}</Link>
+                      </dt>
+                      <dd>{book.summary}</dd>
+                    </Fragment>
+                  ))
+                ) : (
+                  <p>This author has no books in our library</p>
+                )}
+              </dl>
+            </div>
 
-        <div className="float-right">
-          <button onClick={this.toggleModal} type="button" className="btn btn-success mr-3">
-            Edit
-          </button>
-          <button onClick={this.toggleModal} type="button" className="btn btn-danger">
-            Delete
-          </button>
-        </div>
+            <div className="float-right">
+              <button onClick={this.toggleModal} type="button" className="btn btn-success mr-3">
+                Edit
+              </button>
+              <button onClick={this.toggleModal} type="button" className="btn btn-danger">
+                Delete
+              </button>
+            </div>
 
-        {this.renderModal()}
+            {this.renderModal()}
+          </Fragment>
+        )}
       </div>
     );
   }

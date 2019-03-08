@@ -86,7 +86,7 @@ class BookCreate extends Component {
       })
         .then(res => res.json())
         .then((data) => {
-          console.log( 'updating book: ',data);
+          console.log('updating book: ', data);
           if (data.errors) {
             this.setState({ errors: data.errors });
           }
@@ -111,7 +111,7 @@ class BookCreate extends Component {
       })
         .then(res => res.json())
         .then((data) => {
-          console.log('creating book: ',data);
+          console.log('creating book: ', data);
           if (data.errors) {
             this.setState({ errors: data.errors });
           }
@@ -140,7 +140,7 @@ class BookCreate extends Component {
 
     return (
       <div>
-        <h1>Book Create</h1>
+        <h1>Book Form</h1>
 
         <form onSubmit={this.handleSubmit} style={{ maxWidth: '600px' }}>
           <div className="form-group">

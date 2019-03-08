@@ -53,7 +53,7 @@ class GenreCreate extends Component {
     const { error, isOpen } = this.state;
     return (
       <div>
-        <h1>Create Genre</h1>
+        <h1>Genre Form</h1>
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label htmlFor="genre">

@@ -122,84 +122,98 @@ class BookDetail extends Component {
     const { title, book, bookInstance } = this.state;
     return (
       <div>
-        <h1>
-          {title}: {book.title}
-        </h1>
-        {book !== '' && (
+        {title === '' ? (
+          <div className="text-center">
+            <div
+              style={{ width: '3em', height: '3em' }}
+              className="mt-5 spinner-border text-secondary"
+              role="status"
+            >
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        ) : (
           <Fragment>
-            <p>
-              <strong>Author:</strong> <Link to={book.author.url}>{book.author.name}</Link>
-            </p>
-            <p>
-              <strong>Summary:</strong> {book.summary}
-            </p>
-            <p>
-              <strong>ISBN:</strong> {book.isbn}
-            </p>
-            <p>
-              <strong>Genre: </strong>
-              {book.genre.map((data, i) => (
-                <Fragment key={data._id}>
-                  <Link key={data._id} to={data.url}>
-                    {data.name}
-                  </Link>
-                  {i < book.genre.length - 1 && ', '}
-                </Fragment>
-              ))}
-            </p>
-          </Fragment>
-        )}
-
-        <div style={{ marginLeft: '20px', marginTop: '20px' }}>
-          <h4>Copies</h4>
-          {bookInstance.length > 0 ? (
-            bookInstance.map(bookInst => (
-              <Fragment key={bookInst._id}>
-                <hr />
-                {(() => {
-                  switch (bookInst.status) {
-                    case 'Available':
-                      return <p className="text-success">{bookInst.status}</p>;
-                    case 'Maintenance':
-                      return <p className="text-danger">{bookInst.status}</p>;
-                    default:
-                      return <p className="text-warning">{bookInst.status}</p>;
-                  }
-                })()}
+            <h1>
+              {title}: {book.title}
+            </h1>
+            {book !== '' && (
+              <Fragment>
                 <p>
-                  <strong>Imprint:</strong> {bookInst.imprint}
+                  <strong>Author:</strong> <Link to={book.author.url}>{book.author.name}</Link>
                 </p>
-                {bookInst.status !== 'Available' && (
-                  <p>
-                    <strong>Due back:</strong> {bookInst.dueBackFormatted}
-                  </p>
-                )}
                 <p>
-                  <strong>Id:</strong> <Link to={bookInst.url}> {bookInst._id}</Link>
+                  <strong>Summary:</strong> {book.summary}
+                </p>
+                <p>
+                  <strong>ISBN:</strong> {book.isbn}
+                </p>
+                <p>
+                  <strong>Genre: </strong>
+                  {book.genre.map((data, i) => (
+                    <Fragment key={data._id}>
+                      <Link key={data._id} to={data.url}>
+                        {data.name}
+                      </Link>
+                      {i < book.genre.length - 1 && ', '}
+                    </Fragment>
+                  ))}
                 </p>
               </Fragment>
-            ))
-          ) : (
-            <p>There are no copies of this book in the library.</p>
-          )}
-        </div>
+            )}
 
-        <div className="float-right">
-          <Link
-            to={{
-              pathname: '/book/book-form',
-              book,
-            }}
-            className="btn btn-success mr-3"
-          >
-            Edit
-          </Link>
-          <button onClick={this.toggleModal} type="button" className="btn btn-danger">
-            Delete
-          </button>
-        </div>
+            <div style={{ marginLeft: '20px', marginTop: '20px' }}>
+              <h4>Copies</h4>
+              {bookInstance.length > 0 ? (
+                bookInstance.map(bookInst => (
+                  <Fragment key={bookInst._id}>
+                    <hr />
+                    {(() => {
+                      switch (bookInst.status) {
+                        case 'Available':
+                          return <p className="text-success">{bookInst.status}</p>;
+                        case 'Maintenance':
+                          return <p className="text-danger">{bookInst.status}</p>;
+                        default:
+                          return <p className="text-warning">{bookInst.status}</p>;
+                      }
+                    })()}
+                    <p>
+                      <strong>Imprint:</strong> {bookInst.imprint}
+                    </p>
+                    {bookInst.status !== 'Available' && (
+                      <p>
+                        <strong>Due back:</strong> {bookInst.dueBackFormatted}
+                      </p>
+                    )}
+                    <p>
+                      <strong>Id:</strong> <Link to={bookInst.url}> {bookInst._id}</Link>
+                    </p>
+                  </Fragment>
+                ))
+              ) : (
+                <p>There are no copies of this book in the library.</p>
+              )}
+            </div>
 
-        {this.renderModal()}
+            <div className="float-right">
+              <Link
+                to={{
+                  pathname: '/book/book-form',
+                  book,
+                }}
+                className="btn btn-success mr-3"
+              >
+                Edit
+              </Link>
+              <button onClick={this.toggleModal} type="button" className="btn btn-danger">
+                Delete
+              </button>
+            </div>
+
+            {this.renderModal()}
+          </Fragment>
+        )}
       </div>
     );
   }

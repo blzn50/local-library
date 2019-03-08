@@ -32,7 +32,6 @@ const author_detail = (req, res, next) => {
         return next(error);
       }
       return res.send({
-        title: 'Author Detail',
         author: results.author,
         authorsBook: results.authorsBook,
       });

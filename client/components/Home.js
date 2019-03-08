@@ -18,35 +18,49 @@ class Home extends Component {
 
     return (
       <div>
-        <h1>Welcome to {title}!!!</h1>
-        <h3>A greate place to harness knowledge.</h3>
-        {error ? (
-          <h4>Error on fetching data</h4>
+        {title === '' ? (
+          <div className="text-center">
+            <div
+              style={{ width: '3em', height: '3em' }}
+              className="mt-5 spinner-border text-secondary"
+              role="status"
+            >
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
         ) : (
           <Fragment>
-            <p>The library has following record counts:</p>
-            <ul>
-              <li>
-                <strong>Books: </strong>
-                {data.bookCount}
-              </li>
-              <li>
-                <strong>Copies: </strong>
-                {data.bookInstanceCount}
-              </li>
-              <li>
-                <strong>Available: </strong>
-                {data.bookInstanceAvailableCount}
-              </li>
-              <li>
-                <strong>Authors: </strong>
-                {data.authorCount}
-              </li>
-              <li>
-                <strong>Genres: </strong>
-                {data.genreCount}
-              </li>
-            </ul>
+            <h1>Welcome to {title}!!!</h1>
+            <h3>A greate place to harness knowledge.</h3>
+            {error ? (
+              <h4>Error on fetching data</h4>
+            ) : (
+              <Fragment>
+                <p>The library has following record counts:</p>
+                <ul>
+                  <li>
+                    <strong>Books: </strong>
+                    {data.bookCount}
+                  </li>
+                  <li>
+                    <strong>Copies: </strong>
+                    {data.bookInstanceCount}
+                  </li>
+                  <li>
+                    <strong>Available: </strong>
+                    {data.bookInstanceAvailableCount}
+                  </li>
+                  <li>
+                    <strong>Authors: </strong>
+                    {data.authorCount}
+                  </li>
+                  <li>
+                    <strong>Genres: </strong>
+                    {data.genreCount}
+                  </li>
+                </ul>
+              </Fragment>
+            )}
           </Fragment>
         )}
       </div>

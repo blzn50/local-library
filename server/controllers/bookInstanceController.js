@@ -24,7 +24,7 @@ exports.bookinstance_detail = (req, res, next) => {
         error.status = 404;
         return next(error);
       }
-      res.send({ title: 'Book', bookInstance });
+      res.send({ bookInstance });
     });
 };
 
