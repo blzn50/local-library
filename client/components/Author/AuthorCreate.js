@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import { Alert } from 'reactstrap';
 import '../Genre/genreCreate.scss';
 
@@ -7,40 +8,88 @@ class AuthorCreate extends Component {
     super(props);
     this.state = {
       error: [],
+      firstName: '',
+      lastName: '',
+      dateOfBirth: '',
+      dateOfDeath: '',
       isOpen: true,
     };
   }
 
+  componentDidMount() {
+    const { author } = this.props.location;
+
+    if (author) {
+      this.setState({
+        firstName: author.firstName,
+        lastName: author.lastName,
+        dateOfBirth: author.dateOfBirth,
+        dateOfDeath: author.dateOfDeath,
+      });
+    }
+  }
+
+  handleChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
+
   handleSubmit = (e) => {
     e.preventDefault();
+    const { author } = this.props.location;
+
     // console.log(e.target[0].value);
     const firstName = e.target[0].value;
     const lastName = e.target[1].value;
     const dateOfBirth = e.target[2].value;
     const dateOfDeath = e.target[3].value;
 
-    fetch('/catalog/author/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        firstName,
-        lastName,
-        dateOfBirth,
-        dateOfDeath,
-      }),
-    })
-      .then(res => res.json())
-      .then((data) => {
-        // console.log(data);
-        if (data.errors) {
-          this.setState({ error: data.errors });
-        }
-        if (data.url && window) {
-          window.location.href = data.url;
-        }
-      });
+    if (author) {
+      fetch(`/catalog/author/${author._id}/update`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          dateOfBirth,
+          dateOfDeath,
+        }),
+      })
+        .then(res => res.json())
+        .then((data) => {
+          if (data.errors) {
+            this.setState({ error: data.errors });
+          }
+          if (data.url && window) {
+            window.location.href = data.url;
+          }
+        });
+    } else {
+      fetch('/catalog/author/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          dateOfBirth,
+          dateOfDeath,
+        }),
+      })
+        .then(res => res.json())
+        .then((data) => {
+          if (data.errors) {
+            this.setState({ error: data.errors });
+          }
+          if (data.url && window) {
+            window.location.href = data.url;
+          }
+        });
+    }
   };
 
   handleDismiss = () => {
@@ -54,7 +103,10 @@ class AuthorCreate extends Component {
   };
 
   render() {
-    const { isOpen, error } = this.state;
+    const {
+      isOpen, error, firstName, lastName, dateOfBirth, dateOfDeath,
+    } = this.state;
+    // console.log('dateOfBirth: ', dateOfBirth);
     return (
       <div>
         <h1>Author Form</h1>
@@ -69,6 +121,8 @@ class AuthorCreate extends Component {
               className="form-control"
               placeholder="First Name"
               required
+              value={firstName}
+              onChange={this.handleChange}
             />
             <label htmlFor="lastName"> Last Name:</label>
             <input
@@ -78,6 +132,8 @@ class AuthorCreate extends Component {
               className="form-control"
               placeholder="Last Name"
               required
+              value={lastName}
+              onChange={this.handleChange}
             />
           </div>
           <div className="form-group">
@@ -88,6 +144,8 @@ class AuthorCreate extends Component {
               name="dateOfBirth"
               className="form-control"
               placeholder="dd/mm/yyyy"
+              value={moment(dateOfBirth).format('YYYY-MM-DD') || ''}
+              onChange={this.handleChange}
             />
             <label htmlFor="dateOfDeath">Date of Death</label>
             <input
@@ -96,6 +154,8 @@ class AuthorCreate extends Component {
               name="dateOfDeath"
               className="form-control"
               placeholder="dd/mm/yyyy"
+              value={moment(dateOfDeath).format('YYYY-MM-DD') || ''}
+              onChange={this.handleChange}
             />
           </div>
           <button type="submit" className="btn btn-primary">

@@ -215,15 +215,9 @@ class BookCreate extends Component {
               ))}
             </div>
           </div>
-          {book ? (
-            <button className="btn btn-primary" type="submit">
-              Update
-            </button>
-          ) : (
-            <button className="btn btn-primary" type="submit">
-              Submit
-            </button>
-          )}
+          <button className="btn btn-primary" type="submit">
+            Submit
+          </button>
         </form>
         <ul className="list-group" style={{ position: 'relative' }}>
           {errors.length > 0

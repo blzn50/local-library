@@ -130,9 +130,15 @@ class AuthorDetail extends Component {
             </div>
 
             <div className="float-right">
-              <button onClick={this.toggleModal} type="button" className="btn btn-success mr-3">
+              <Link
+                to={{
+                  pathname: '/author/author-form',
+                  author,
+                }}
+                className="btn btn-success mr-3"
+              >
                 Edit
-              </button>
+              </Link>
               <button onClick={this.toggleModal} type="button" className="btn btn-danger">
                 Delete
               </button>

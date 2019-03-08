@@ -90,12 +90,64 @@ const author_create_post = [
 ];
 
 const author_update_get = (req, res) => {
-  res.send('TO BE IMPLEMENTED: Author update_get');
+  // res.send('TO BE IMPLEMENTED: Author update_get');
 };
 
-const author_update_post = (req, res) => {
-  res.send('TO BE IMPLEMENTED: Author update_post');
-};
+const author_update_post = [
+  body('firstName')
+    .isLength({ min: 2 })
+    .trim()
+    .withMessage('First name must be specified.')
+    .isAlphanumeric()
+    .withMessage('First name has non-alphanumeric characters.'),
+  body('lastName')
+    .isLength({ min: 2 })
+    .trim()
+    .withMessage('Last name must be specified.')
+    .isAlphanumeric()
+    .withMessage('Last name has non-alphanumeric characters.'),
+  body('dateOfBirth', 'Invalid date of birth')
+    .optional({ checkFalsy: true })
+    .isISO8601(),
+  body('dateOfDeath', 'Invalid date of death')
+    .optional({ checkFalsy: true })
+    .isISO8601(),
+
+  sanitizeBody('firstName')
+    .trim()
+    .escape(),
+  sanitizeBody('lastName')
+    .trim()
+    .escape(),
+  sanitizeBody('dateOfBirth').toDate(),
+  sanitizeBody('dateOfDeath').toDate(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.send({ errors: errors.array() });
+    } else {
+      const rawFirstName = capitalizeFirstLetter(req.body.firstName);
+      const rawLastName = capitalizeFirstLetter(req.body.lastName);
+
+      const author = new Author({
+        firstName: rawFirstName,
+        lastName: rawLastName,
+        dateOfBirth: req.body.dateOfBirth,
+        dateOfDeath: req.body.dateOfDeath,
+        _id: req.params.id,
+      });
+      Author.findByIdAndUpdate(
+        req.params.id,
+        author,
+        { new: true, useFindAndModify: false },
+        (err, theauthor) => {
+          if (err) return next(err);
+          return res.send({ url: theauthor.url });
+        },
+      );
+    }
+  },
+];
 
 // const author_delete_get = (req, res, next) => {
 //   async.parallel(

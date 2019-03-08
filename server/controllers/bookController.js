@@ -229,13 +229,18 @@ exports.book_update_post = [
     if (!errors.isEmpty()) {
       res.send({ errors: errors.array() });
     } else {
-      Book.findOneAndUpdate(req.params.id, book, { new: true }, (err, thebook) => {
-        if (err) {
-          return next(err);
-        }
-        // Successful - redirect to book detail page.
-        return res.send({ url: thebook.url });
-      });
+      Book.findByIdAndUpdate(
+        req.params.id,
+        book,
+        { new: true, useFindAndModify: false },
+        (err, thebook) => {
+          if (err) {
+            return next(err);
+          }
+          // Successful - redirect to book detail page.
+          return res.send({ url: thebook.url });
+        },
+      );
     }
   },
 ];

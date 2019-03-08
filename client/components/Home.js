@@ -37,26 +37,28 @@ class Home extends Component {
             ) : (
               <Fragment>
                 <p>The library has following record counts:</p>
-                <ul>
-                  <li>
+                <ul className="list-group" style={{ maxWidth: '450px' }}>
+                  <li className="list-group-item d-flex justify-content-between align-items-center">
                     <strong>Books: </strong>
-                    {data.bookCount}
+                    <span className="badge badge-primary badge-pill">{data.bookCount}</span>
                   </li>
-                  <li>
+                  <li className="list-group-item d-flex justify-content-between align-items-center">
                     <strong>Copies: </strong>
-                    {data.bookInstanceCount}
+                    <span className="badge badge-primary badge-pill">{data.bookInstanceCount}</span>
                   </li>
-                  <li>
+                  <li className="list-group-item d-flex justify-content-between align-items-center">
                     <strong>Available: </strong>
-                    {data.bookInstanceAvailableCount}
+                    <span className="badge badge-primary badge-pill">
+                      {data.bookInstanceAvailableCount}
+                    </span>
                   </li>
-                  <li>
+                  <li className="list-group-item d-flex justify-content-between align-items-center">
                     <strong>Authors: </strong>
-                    {data.authorCount}
+                    <span className="badge badge-primary badge-pill">{data.authorCount}</span>
                   </li>
-                  <li>
+                  <li className="list-group-item d-flex justify-content-between align-items-center">
                     <strong>Genres: </strong>
-                    {data.genreCount}
+                    <span className="badge badge-primary badge-pill">{data.genreCount}</span>
                   </li>
                 </ul>
               </Fragment>
