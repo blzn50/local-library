@@ -32,7 +32,7 @@ class App extends Component {
             <div className="col-sm-2">
               <Sidebar />
             </div>
-            <div className="col-sm-10">
+            <div className="col-sm-10 mb-5">
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route path="/books" component={Books} />

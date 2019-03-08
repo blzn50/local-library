@@ -98,9 +98,9 @@ class GenreDetail extends Component {
   };
 
   render() {
-    const {  genre, genreBooks } = this.state;
+    const { genre, genreBooks } = this.state;
     return (
-      <div>
+      <div className="mb-5">
         {genre === '' ? (
           <div className="text-center">
             <div
@@ -133,9 +133,15 @@ class GenreDetail extends Component {
             </div>
 
             <div className="float-right">
-              <button onClick={this.toggleModal} type="button" className="btn btn-success mr-3">
-                Edit
-              </button>
+              <Link
+                to={{
+                  pathname: '/genre/genre-form',
+                  genre,
+                }}
+                className="btn btn-success mr-3"
+              >
+                Edit Genre
+              </Link>
               <button onClick={this.toggleModal} type="button" className="btn btn-danger">
                 Delete
               </button>

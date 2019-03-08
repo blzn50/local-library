@@ -110,6 +110,31 @@ exports.genre_update_get = (req, res) => {
 };
 
 // Handle Genre update on POST.
-exports.genre_update_post = (req, res) => {
-  res.send('NOT IMPLEMENTED: Genre update POST');
-};
+exports.genre_update_post = [
+  body('name', 'Genre name required')
+    .isLength({ min: 2 })
+    .trim(),
+
+  sanitizeBody('name')
+    .trim()
+    .escape(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    const rawGenre = capitalizeFirstLetter(req.body.name);
+    const genre = new Genre({ name: rawGenre, _id: req.params.id });
+
+    if (!errors.isEmpty()) {
+      res.send({ errors: errors.array() });
+      return;
+    }
+    Genre.findByIdAndUpdate(
+      req.params.id,
+      genre,
+      { new: true, useFindAndModify: false },
+      (err, thegenre) => {
+        if (err) return next(err);
+        return res.send({ url: thegenre.url });
+      },
+    );
+  },
+];

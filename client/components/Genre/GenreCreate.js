@@ -8,35 +8,74 @@ class GenreCreate extends Component {
     super(props);
     this.state = {
       error: [],
+      genre: '',
       isOpen: true,
     };
-    this.genreRef = React.createRef();
+    // this.genreRef = React.createRef();
   }
+
+  componentDidMount() {
+    const { genre } = this.props.location;
+    if (genre) {
+      this.setState({
+        genre: genre.name,
+      });
+    }
+  }
+
+  handleChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const d = this.genreRef.current.value;
-
-    fetch('/catalog/genre/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: d,
-      }),
-    })
-      .then(res => res.json())
-      .then((data) => {
-        if (data.errors) {
-          this.setState({
-            error: data.errors,
-          });
-        }
-        if (data.url && window) {
-          window.location.href = data.url;
-        }
-      });
+    // const d = this.genreRef.current.value;
+    const { genre } = this.props.location;
+    if (genre) {
+      fetch(`/catalog/genre/${genre._id}/update`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: this.state.genre,
+        }),
+      })
+        .then(res => res.json())
+        .then((data) => {
+          if (data.errors) {
+            this.setState({
+              error: data.errors,
+            });
+          }
+          if (data.url && window) {
+            window.location.href = data.url;
+          }
+        });
+    } else {
+      fetch('/catalog/genre/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: this.state.genre,
+        }),
+      })
+        .then(res => res.json())
+        .then((data) => {
+          if (data.errors) {
+            this.setState({
+              error: data.errors,
+            });
+          }
+          if (data.url && window) {
+            window.location.href = data.url;
+          }
+        });
+    }
   };
 
   handleDismiss = () => {
@@ -50,7 +89,7 @@ class GenreCreate extends Component {
   };
 
   render() {
-    const { error, isOpen } = this.state;
+    const { error, isOpen, genre } = this.state;
     return (
       <div>
         <h1>Genre Form</h1>
@@ -64,8 +103,9 @@ class GenreCreate extends Component {
                 name="genre"
                 className="form-control"
                 placeholder="Fantasy, Poetry etc."
-                ref={this.genreRef}
                 required
+                value={genre}
+                onChange={this.handleChange}
               />
             </label>
           </div>
