@@ -94,10 +94,54 @@ exports.bookinstance_delete_post = (req, res, next) => {
 
 // Display BookInstance update form on GET.
 exports.bookinstance_update_get = (req, res) => {
-  res.send('NOT IMPLEMENTED: BookInstance update GET');
+  // res.send('NOT IMPLEMENTED: BookInstance update GET');
 };
 
 // Handle bookinstance update on POST.
-exports.bookinstance_update_post = (req, res) => {
-  res.send('NOT IMPLEMENTED: BookInstance update POST');
-};
+exports.bookinstance_update_post = [
+  body('book', 'Book must be specified')
+    .isLength({ min: 1 })
+    .trim(),
+  body('imprint', 'Imprint must be specified')
+    .isLength({ min: 5 })
+    .trim(),
+  body('dueBack', 'Invalid date')
+    .optional({ checkFalsy: true })
+    .isISO8601(),
+
+  sanitizeBody('book')
+    .trim()
+    .escape(),
+  sanitizeBody('imprint')
+    .trim()
+    .escape(),
+  sanitizeBody('status')
+    .trim()
+    .escape(),
+  sanitizeBody('dueBack').toDate(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    const bookInstance = new BookInstance({
+      book: req.body.book,
+      imprint: req.body.imprint,
+      status: req.body.status,
+      dueBack: req.body.dueBack,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      res.send({ errors: errors.array() });
+    } else {
+      BookInstance.findByIdAndUpdate(
+        req.params.id,
+        bookInstance,
+        { new: true, useFindAndModify: false },
+        (err, thebookinstance) => {
+          if (err) return next(err);
+          return res.send({ url: thebookinstance.url });
+        },
+      );
+    }
+  },
+];
