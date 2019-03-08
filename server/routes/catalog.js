@@ -25,10 +25,10 @@ router.post('/book/create', bookController.book_create_post);
 router.delete('/book/:id/delete', bookController.book_delete_post);
 
 // GET request to update Book.
-router.get('/book/:id/update', bookController.book_update_get);
+// router.get('/book/:id/update', bookController.book_update_get);
 
 // POST request to update Book.
-router.post('/book/:id/update', bookController.book_update_post);
+router.patch('/book/:id/update', bookController.book_update_post);
 
 // GET request for one Book.
 router.get('/book/:id', bookController.book_detail);

@@ -19,15 +19,15 @@ class BookCreate extends Component {
 
   componentDidMount() {
     const { book } = this.props.location;
-    console.log('book: ', book);
+    // console.log('book: ', book);
 
     if (book) {
       this.setState({
         title: book.title,
-        author: book.author.name,
+        author: book.author,
         summary: book.summary,
         isbn: book.isbn,
-        checked: book.genre,
+        checked: book.genre.map(g => g.id),
       });
     }
     fetch('/catalog/book/create')
@@ -65,31 +65,61 @@ class BookCreate extends Component {
   };
 
   handleSubmit = (e) => {
-    const { checked } = this.state;
+    const {
+      checked, title, author, summary, isbn,
+    } = this.state;
+    const { book } = this.props.location;
     e.preventDefault();
-    fetch('/catalog/book/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title: e.target[0].value,
-        author: e.target[1].value,
-        summary: e.target[2].value,
-        isbn: e.target[3].value,
-        genre: checked,
-      }),
-    })
-      .then(res => res.json())
-      .then((data) => {
-        console.log(data);
-        if (data.errors) {
-          this.setState({ errors: data.errors });
-        }
-        if (data.url && window) {
-          window.location.href = data.url;
-        }
-      });
+    if (book) {
+      fetch(`/catalog/book/${book._id}/update`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          author,
+          summary,
+          isbn,
+          genre: checked,
+        }),
+      })
+        .then(res => res.json())
+        .then((data) => {
+          console.log( 'updating book: ',data);
+          if (data.errors) {
+            this.setState({ errors: data.errors });
+          }
+          if (data.url && window) {
+            window.location.href = data.url;
+          }
+        });
+    } else {
+      fetch('/catalog/book/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+
+        body: JSON.stringify({
+          title: e.target[0].value,
+          author: e.target[1].value,
+          summary: e.target[2].value,
+          isbn: e.target[3].value,
+          genre: checked,
+        }),
+      })
+        .then(res => res.json())
+        .then((data) => {
+          console.log('creating book: ',data);
+          if (data.errors) {
+            this.setState({ errors: data.errors });
+          }
+          if (data.url && window) {
+            window.location.href = data.url;
+          }
+        });
+    }
   };
 
   handleDismiss = () => {
@@ -104,8 +134,10 @@ class BookCreate extends Component {
 
   render() {
     const {
-      authors, genres, errors, isOpen, title, author, summary, isbn,
+      authors, genres, errors, isOpen, title, author, summary, isbn, checked,
     } = this.state;
+    const { book } = this.props.location;
+
     return (
       <div>
         <h1>Book Create</h1>
@@ -126,7 +158,13 @@ class BookCreate extends Component {
           </div>
           <div className="form-group">
             <label htmlFor="author">Author:</label>
-            <select className="form-control" name="author" id="author" defaultValue="Select author">
+            <select
+              className="form-control"
+              name="author"
+              id="author"
+              value={author._id}
+              onChange={this.handleChange}
+            >
               {authors.map(author => (
                 <option key={author._id} value={author._id}>
                   {author.name}
@@ -142,6 +180,8 @@ class BookCreate extends Component {
               id="summary"
               name="summary"
               placeholder="Summary"
+              value={summary}
+              onChange={this.handleChange}
             />
           </div>
           <div className="form-group">
@@ -152,6 +192,8 @@ class BookCreate extends Component {
               id="isbn"
               name="isbn"
               placeholder="ISBN13"
+              value={isbn}
+              onChange={this.handleChange}
             />
           </div>
           <div className="form-group">
@@ -166,16 +208,22 @@ class BookCreate extends Component {
                   id={genre._id}
                   name="genre"
                   value={genre._id}
+                  checked={checked.indexOf(genre._id) !== -1}
                   label={genre.name}
-                  // checked={checked}
                   onClick={this.handleCheck}
                 />
               ))}
             </div>
           </div>
-          <button className="btn btn-primary" type="submit">
-            Submit
-          </button>
+          {book ? (
+            <button className="btn btn-primary" type="submit">
+              Update
+            </button>
+          ) : (
+            <button className="btn btn-primary" type="submit">
+              Submit
+            </button>
+          )}
         </form>
         <ul className="list-group" style={{ position: 'relative' }}>
           {errors.length > 0

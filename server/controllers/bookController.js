@@ -113,7 +113,19 @@ exports.book_create_post = [
     .isLength({ min: 1 })
     .trim(),
 
-  sanitizeBody('*')
+  sanitizeBody('title')
+    .trim()
+    .escape(),
+  sanitizeBody('author')
+    .trim()
+    .escape(),
+  sanitizeBody('summary')
+    .trim()
+    .escape(),
+  sanitizeBody('isbn')
+    .trim()
+    .escape(),
+  sanitizeBody('genre.*')
     .trim()
     .escape(),
   (req, res, next) => {
@@ -173,6 +185,57 @@ exports.book_update_get = (req, res) => {
 };
 
 // Handle book update on POST.
-exports.book_update_post = (req, res) => {
-  res.send('NOT IMPLEMENTED: Book update POST');
-};
+exports.book_update_post = [
+  body('title', 'Title must not be empty.')
+    .isLength({ min: 1 })
+    .trim(),
+  body('author', 'Author must not be empty.')
+    .isLength({ min: 1 })
+    .trim(),
+  body('summary', 'Summary must not be empty.')
+    .isLength({ min: 1 })
+    .trim(),
+  body('isbn', 'ISBN must not be empty.')
+    .isLength({ min: 1 })
+    .trim(),
+
+  sanitizeBody('title')
+    .trim()
+    .escape(),
+  sanitizeBody('author')
+    .trim()
+    .escape(),
+  sanitizeBody('summary')
+    .trim()
+    .escape(),
+  sanitizeBody('isbn')
+    .trim()
+    .escape(),
+  sanitizeBody('genre.*')
+    .trim()
+    .escape(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    const book = new Book({
+      title: capitalizeFirstLetter(req.body.title),
+      author: req.body.author,
+      summary: req.body.summary,
+      isbn: req.body.isbn,
+      genre: req.body.genre,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      res.send({ errors: errors.array() });
+    } else {
+      Book.findOneAndUpdate(req.params.id, book, { new: true }, (err, thebook) => {
+        if (err) {
+          return next(err);
+        }
+        // Successful - redirect to book detail page.
+        return res.send({ url: thebook.url });
+      });
+    }
+  },
+];
