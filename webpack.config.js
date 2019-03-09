@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
 const outputDirectory = 'dist';
 const VENDOR_LIBS = ['react', 'react-dom', 'react-router-dom'];
@@ -46,10 +47,17 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
     }),
+    new MomentLocalesPlugin(),
+
+    // Or: To strip all locales except “en”, “es-us” and “ru”
+    // (“en” is built into Moment and can’t be removed)
+    // new MomentLocalesPlugin({
+    //     localesToKeep: ['es-us', 'ru'],
+    // }),
   ],
   optimization: {
     splitChunks: {
-      chunks: 'initial',
+      chunks: 'all',
       automaticNameDelimiter: '.',
     },
   },

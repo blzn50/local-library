@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
+const compression = require('compression');
+const morgan = require('morgan');
 
 const keys = require('../config/keys');
 
@@ -23,15 +25,31 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // Middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(cors());
 app.use(helmet());
-app.use(express.static('dist'));
+app.use(compression());
+app.use(
+  morgan('combined', {
+    skip(req, res) {
+      return res.statusCode < 400;
+    },
+  }),
+);
+// app.use(express.static('dist'));
 
 app.use('/users', usersRouter);
 app.use('/catalog', catalogRouter);
 
-// app.use('/', (req, res) => {
-//   res.redirect('/catalog');
-// });
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('dist'));
+
+  const a = path.resolve('dist', 'index.html');
+  // console.log('a: ', a);
+
+  app.get('*', (req, res) => {
+    res.sendFile(a);
+  });
+}
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
