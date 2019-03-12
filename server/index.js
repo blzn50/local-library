@@ -3,6 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
+const passport = require('passport');
 const mongoose = require('mongoose');
 const compression = require('compression');
 const morgan = require('morgan');
@@ -16,8 +17,8 @@ const catalogRouter = require('./routes/catalog');
 const app = express();
 
 // Set up mongoose connection
-const mongoDB = keys.mongoURI;
-mongoose.connect(mongoDB, { useNewUrlParser: true });
+const mongoDB = process.env.MONGO_URI || keys.mongoURI;
+mongoose.connect(mongoDB, { useNewUrlParser: true, useCreateIndex: true });
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -27,6 +28,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(cors());
 app.use(helmet());
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(compression());
 app.use(
   morgan('combined', {
@@ -35,7 +39,6 @@ app.use(
     },
   }),
 );
-// app.use(express.static('dist'));
 
 app.use('/users', usersRouter);
 app.use('/catalog', catalogRouter);
@@ -44,8 +47,6 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static('dist'));
 
   const a = path.resolve('dist', 'index.html');
-  // console.log('a: ', a);
-
   app.get('*', (req, res) => {
     res.sendFile(a);
   });
@@ -69,4 +70,5 @@ app.use((err, req, res, next) => {
   res.send({ error: err });
 });
 
-app.listen(5000, () => console.log('Server listening in port 5000'));
+const port = process.env.PORT || 5000;
+app.listen(port, () => console.log(`Server listening in port ${port}`));

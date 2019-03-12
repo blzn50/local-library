@@ -16,13 +16,7 @@ import GenreCreate from './components/Genre/GenreCreate';
 import GenreDetail from './components/Genre/GenreDetail';
 
 class App extends Component {
-  state = { data: null };
-
-  componentDidMount() {
-    fetch('/api')
-      .then(res => res.json())
-      .then(data => this.setState({ data: data.data }));
-  }
+  componentDidMount() {}
 
   render() {
     return (
@@ -32,7 +26,7 @@ class App extends Component {
             <div className="col-sm-2">
               <Sidebar />
             </div>
-            <div className="col-sm-10 mb-5">
+            <div className="col-sm-10 mb-5" style={{ maxWidth: '1000px' }}>
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route path="/books" component={Books} />
