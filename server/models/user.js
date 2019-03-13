@@ -37,7 +37,7 @@ UserSchema.pre('save', function save(next) {
 
 UserSchema.methods.comparePassword = function compare(password, cb) {
   bcrypt.compare(password, this.password, (error, isValid) => {
-    if (error) return cb(error, 'error in compare');
+    if (error) return cb(error);
     return cb(null, isValid);
   });
 };
