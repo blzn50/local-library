@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 
 const { Schema } = mongoose;
 
@@ -42,12 +41,12 @@ UserSchema.methods.comparePassword = function compare(password, cb) {
   });
 };
 
-UserSchema.methods.generateJWT = function generateJWT() {
-  const expiry = new Date();
-  expiry.setHours(expiry.getHours() + 2);
-  this.password = '';
-  return jwt.sign(this.toJSON(), 'secret');
-};
+// UserSchema.methods.generateJWT = function generateJWT() {
+//   const expiry = new Date();
+//   expiry.setHours(expiry.getHours() + 2);
+//   this.password = '';
+//   return jwt.sign(this.toJSON(), 'secret');
+// };
 
 // UserSchema.set('toObject', { virtuals: true });
 // UserSchema.set('toJSON', { virtuals: true });

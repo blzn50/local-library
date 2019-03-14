@@ -1,5 +1,6 @@
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
+const passport = require('passport');
 const User = require('../models/user');
 
 exports.signup = [
@@ -62,30 +63,70 @@ exports.login = [
     .trim()
     .normalizeEmail(),
   sanitizeBody('password').trim(),
+
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.send({ errors: errors.array() });
     } else {
-      User.findOne({ email: req.body.email }, (err, user) => {
-        if (err) throw err;
-        if (!user) {
-          return res.send({ errors: "Email/Password doesn't match" });
+      passport.authenticate('local', (er, usr, info) => {
+        if (er) throw er;
+
+        if (!usr) {
+          return res.send({ errors: "Email/Password doesn't match." });
         }
-        user.comparePassword(req.body.password, (error, isValid) => {
+        usr.comparePassword(req.body.password, (error, isValid) => {
           if (isValid && !error) {
-            const token = user.generateJWT();
-            res.send({ token: `JWT ${token}` });
+            // const token = user.generateJWT();
+            // res.send({ token: `JWT ${token}` });
+            req.logIn(usr, (err) => {
+              usr.password = '';
+              if (err) {
+                return next(err);
+              }
+              return res.send({ url: '/detail' });
+            });
+            // res.send('user logged in');
+            // done(null, user);
           } else if (!isValid) {
-            res.send({ errors: "Email/Password doesn't match" });
+            return res.send({ errors: "Email/Password doesn't match." });
+            // done(null, false);
           } else {
             console.log(error);
+            // return done(error);
             return next(error);
           }
         });
-      });
+        // User.findOne({ email: req.body.email }, (err, user) => {
+        //   if (err) throw err;
+        //   console.log(user);
+        //   if (!user) {
+        //     return res.send({ errors: "Email/Password doesn't match" });
+        //     // return done(null, false, { message: "Email/Password doesn't match" });
+        //   }
+        //   user.comparePassword(req.body.password, (error, isValid) => {
+        //     console.log('isValid: ', isValid);
+        //     console.log('error: ', error);
+        //     if (isValid && !error) {
+        //       // const token = user.generateJWT();
+        //       // res.send({ token: `JWT ${token}` });
+        //       res.send('user logged in');
+        //       // done(null, user);
+        //     } else if (!isValid) {
+        //       res.send({ errors: "Email/Password doesn't match" });
+        //       // done(null, false);
+        //     } else {
+        //       console.log(error);
+        //       // return done(error);
+        //       return next(error);
+        //     }
+        //   });
+        // });
+      })(req, res, next);
     }
   },
 ];
 
-exports.user = (req, res, next) => {};
+exports.user = (req, res, next) => {
+  res.send(req.user);
+};

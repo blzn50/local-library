@@ -4,12 +4,20 @@ const LocalStrategy = require('passport-local').Strategy;
 const User = require('../models/user');
 
 passport.serializeUser((user, done) => {
+  user.password = '';
+  // console.log('user serialize: ', user);
+
   done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
   User.findById(id, (err, user) => {
-    if (err) return done(err, 'in deserialize');
+    user.password = '';
+    // console.log('id: ', id);
+    // console.log('err: ', err);
+    // console.log('user desc: ', user);
+
+    if (err) return done(err);
     return done(null, user);
   });
 });
@@ -18,18 +26,23 @@ passport.use(
   new LocalStrategy(
     {
       usernameField: 'email',
+      passReqToCallback: true,
     },
-    (email, password, done) => {
-      console.log('done: ', done);
-      console.log('password: ', password);
-      console.log('email: ', email);
+    (req, email, password, done) => {
+      // console.log('2done: ', done);
+      // console.log('2password: ', password);
+      // console.log('2email: ', email);
 
       User.findOne({ email }).exec((err, user) => {
-        if (err) return done(err);
+        done(err, user);
+        // if (err) return done(err);
 
-        if (!user) return done(null, false);
+        // if (!user) return done(null, false);
 
-        return done(null, user);
+        // if (user && user.comparePassword(password, done)) {
+        //   return done(null, user);
+        // }
+        // return done(null, false);
       });
     },
   ),

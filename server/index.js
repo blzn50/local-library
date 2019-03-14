@@ -1,12 +1,14 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const session = require('express-session');
 const cors = require('cors');
 const helmet = require('helmet');
 const passport = require('passport');
 const mongoose = require('mongoose');
 const compression = require('compression');
 const morgan = require('morgan');
+require('./services/passport');
 
 const keys = require('../config/keys');
 
@@ -25,9 +27,22 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // Middlewares
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(cors());
 app.use(helmet());
+// app.set('trust proxy', 1) // trust first proxy if behind proxy
+app.use(
+  session({
+    name: 'user.library',
+    secret: process.env.SECRET || keys.SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      // secure: true, // only over https
+      maxAge: 2 * 60 * 60 * 1000,
+    }, // 2 hours
+  }),
+);
 app.use(passport.initialize());
 app.use(passport.session());
 
