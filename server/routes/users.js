@@ -5,7 +5,11 @@ const authMiddleware = require('../services/authMiddleware');
 const router = express.Router();
 
 router.post('/signup', userController.signup);
+
 router.post('/login', userController.login);
 
 router.get('/detail', authMiddleware, userController.user);
+
+router.post('/forgotpassword', userController.forgotPassword);
+
 module.exports = router;

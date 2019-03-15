@@ -1,7 +1,19 @@
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const passport = require('passport');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 const User = require('../models/user');
+const keys = require('../../config/keys');
+
+const transport = nodemailer.createTransport({
+  service: process.env.MAIL_SERVICE || keys.MAIL_SERVICE,
+  auth: {
+    user: process.env.MAIL_USER || keys.MAIL_USER,
+    pass: process.env.MAIL_PASS || keys.MAIL_PASS,
+  },
+  debug: true,
+});
 
 exports.signup = [
   body('name', 'Name must be specified.')
@@ -130,3 +142,55 @@ exports.login = [
 exports.user = (req, res, next) => {
   res.send(req.user);
 };
+
+exports.forgotPassword = [
+  body('email')
+    .trim()
+    .isEmail()
+    .normalizeEmail(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.send(errors.array());
+    }
+    const token = crypto.randomBytes(20).toString('hex');
+    // console.log('token: ', token);
+
+    User.findOneAndUpdate(
+      { email: req.body.email },
+      {
+        $set: {
+          resetPasswordToken: token,
+          resetPasswordExpires: Date.now() + 360000,
+        },
+      },
+      { new: true, useFindAndModify: false },
+    ).exec((err, theuser) => {
+      if (err) return next(err);
+      if (!theuser) {
+        return res.send({ errors: 'No such email found.' });
+      }
+
+      const mailOptions = {
+        from: 'Local Library <no-reply@loclibrary.com>',
+        to: `${theuser.email}`,
+        subject: 'Link to reset Password',
+        text:
+          'You are receiving this because you have requested the reset of the password for your account.\n\n'
+          + 'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n'
+          + `http://localhost:3000/reset/${token}\n\n`
+          + 'If you did not request this, please ignore this email and your password will remain unchanged.\n',
+      };
+
+      transport.sendMail(mailOptions, (error, response) => {
+        if (error) {
+          console.error('there was an error: ', err);
+        } else {
+          console.log('here is the res: ', response);
+          return res.status(200).json('recovery email sent');
+        }
+      });
+      // res.send('some data for email');
+    });
+  },
+];
