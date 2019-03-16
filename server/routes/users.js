@@ -8,6 +8,8 @@ router.post('/signup', userController.signup);
 
 router.post('/login', userController.login);
 
+router.get('/logout', userController.logout);
+
 router.get('/detail', authMiddleware, userController.user);
 
 router.post('/forgotpassword', userController.forgotPassword);

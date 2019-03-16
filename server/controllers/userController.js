@@ -40,24 +40,50 @@ exports.signup = [
     if (!errors.isEmpty()) {
       res.send({ errors: errors.array() });
     } else {
-      const user = new User({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-      });
+      passport.authenticate('local', (er, usr, info) => {
+        console.log('info: ', info);
+        console.log('usr: ', usr);
+        console.log('er: ', er);
 
-      user.save((err) => {
-        if (err) {
-          console.log(err);
-          if (err.code === 11000) {
-            return res.send({
-              errors: 'Email already used. Please use new email to sign up or go to login page',
-            });
-          }
-          return next(err);
+        if (er) throw er;
+        if (usr) {
+          return res.send({
+            errors: 'Email already used. Please use new email to sign up or go to login page.',
+          });
         }
-        return res.json({ message: 'User created successfully!' });
-      });
+        if (!usr) {
+          const user = new User({
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+          });
+
+          user.save((error, theuser) => {
+            if (error) {
+              console.log(error);
+              if (error.code === 11000) {
+                return res.send({
+                  errors:
+                    'Email already used. Please use new email to sign up or go to login page.',
+                });
+              }
+              return next(error);
+            }
+            const returnedUser = {
+              id: theuser.id,
+              name: theuser.name,
+              email: theuser.email,
+            };
+            req.logIn(returnedUser, (err) => {
+              // returnedUser.password = '';
+              if (err) {
+                return next(err);
+              }
+              return res.json({ message: 'User created successfully!', url: '/detail' });
+            });
+          });
+        }
+      })(req, res, next);
     }
   },
 ];
@@ -85,14 +111,17 @@ exports.login = [
         if (er) throw er;
 
         if (!usr) {
-          return res.send({ errors: "Email/Password doesn't match." });
+          return res.send({ errors: 'Your username or password is invalid.' });
         }
         usr.comparePassword(req.body.password, (error, isValid) => {
           if (isValid && !error) {
-            // const token = user.generateJWT();
-            // res.send({ token: `JWT ${token}` });
-            req.logIn(usr, (err) => {
-              usr.password = '';
+            const returnedUser = {
+              id: usr.id,
+              name: usr.name,
+              email: usr.email,
+            };
+            req.logIn(returnedUser, (err) => {
+              // usr.password = '';
               if (err) {
                 return next(err);
               }
@@ -101,7 +130,7 @@ exports.login = [
             // res.send('user logged in');
             // done(null, user);
           } else if (!isValid) {
-            return res.send({ errors: "Email/Password doesn't match." });
+            return res.send({ errors: 'Your username or password is invalid.' });
             // done(null, false);
           } else {
             console.log(error);
@@ -139,6 +168,10 @@ exports.login = [
   },
 ];
 
+exports.logout = (req, res, next) => {
+  req.logout();
+  res.send({ message: 'You have been logged out!' });
+};
 exports.user = (req, res, next) => {
   res.send(req.user);
 };

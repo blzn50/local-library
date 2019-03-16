@@ -12,13 +12,17 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
   User.findById(id, (err, user) => {
-    user.password = '';
+    const returnedUser = {
+      id,
+      name: user.name,
+      email: user.email,
+    };
     // console.log('id: ', id);
     // console.log('err: ', err);
-    // console.log('user desc: ', user);
+    // console.log('user desc: ', returnedUser);
 
     if (err) return done(err);
-    return done(null, user);
+    return done(null, returnedUser);
   });
 });
 
@@ -45,5 +49,6 @@ passport.use(
         // return done(null, false);
       });
     },
+    // process.nextTick(doUserThing),
   ),
 );
