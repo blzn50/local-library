@@ -19,6 +19,9 @@
   "author": "Naren Lama",
   "license": "MIT",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.15",
+    "@fortawesome/free-solid-svg-icons": "^5.7.2",
+    "@fortawesome/react-fontawesome": "^0.1.4",
     "async": "^2.6.1",
     "babel-polyfill": "^6.26.0",
     "bcrypt": "^3.0.4",

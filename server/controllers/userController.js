@@ -24,8 +24,9 @@ exports.signup = [
     .trim()
     .isEmail()
     .withMessage('Please input valid email.'),
-  body('password')
+  body('password', 'Password must be specified.')
     .isLength({ min: 7 })
+    .trim()
     .withMessage('Password must be at least 7 characters long.'),
 
   sanitizeBody('name')
@@ -34,21 +35,27 @@ exports.signup = [
   sanitizeBody('email')
     .trim()
     .normalizeEmail(),
-  sanitizeBody('password').trim(),
+  sanitizeBody('password')
+    .trim()
+    .escape(),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.send({ errors: errors.array() });
     } else {
       passport.authenticate('local', (er, usr, info) => {
-        console.log('info: ', info);
-        console.log('usr: ', usr);
-        console.log('er: ', er);
+        // console.log('info: ', info);
+        // console.log('usr: ', usr);
+        // console.log('er: ', er);
 
         if (er) throw er;
         if (usr) {
           return res.send({
-            errors: 'Email already used. Please use new email to sign up or go to login page.',
+            errors: [
+              {
+                msg: 'There is an existing account associated with that email.',
+              },
+            ],
           });
         }
         if (!usr) {
@@ -63,8 +70,11 @@ exports.signup = [
               console.log(error);
               if (error.code === 11000) {
                 return res.send({
-                  errors:
-                    'Email already used. Please use new email to sign up or go to login page.',
+                  errors: [
+                    {
+                      msg: 'There is an existing account associated with that email.',
+                    },
+                  ],
                 });
               }
               return next(error);
@@ -93,14 +103,17 @@ exports.login = [
     .trim()
     .isEmail()
     .withMessage('Please input valid email.'),
-  body('password')
+  body('password', 'Password must be specified')
+    .trim()
     .isLength({ min: 7 })
     .withMessage('Password must be at least 7 characters long.'),
 
   sanitizeBody('email')
     .trim()
     .normalizeEmail(),
-  sanitizeBody('password').trim(),
+  sanitizeBody('password')
+    .trim()
+    .escape(),
 
   (req, res, next) => {
     const errors = validationResult(req);
@@ -111,7 +124,7 @@ exports.login = [
         if (er) throw er;
 
         if (!usr) {
-          return res.send({ errors: 'Your username or password is invalid.' });
+          return res.send({ errors: [{ msg: 'Your username or password is invalid.' }] });
         }
         usr.comparePassword(req.body.password, (error, isValid) => {
           if (isValid && !error) {
@@ -130,7 +143,7 @@ exports.login = [
             // res.send('user logged in');
             // done(null, user);
           } else if (!isValid) {
-            return res.send({ errors: 'Your username or password is invalid.' });
+            return res.send({ errors: [{ msg: 'Your username or password is invalid.' }] });
             // done(null, false);
           } else {
             console.log(error);
@@ -227,3 +240,5 @@ exports.forgotPassword = [
     });
   },
 ];
+
+exports.resetPassword = [];

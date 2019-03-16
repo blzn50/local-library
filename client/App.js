@@ -14,6 +14,8 @@ import BookInstanceDetail from './components/BookInstance/BookInstanceDetail';
 import Genres from './components/Genre/Genres';
 import GenreCreate from './components/Genre/GenreCreate';
 import GenreDetail from './components/Genre/GenreDetail';
+import Signup from './components/Profile/Signup';
+import Login from './components/Profile/Login';
 
 class App extends Component {
   componentDidMount() {}
@@ -29,6 +31,8 @@ class App extends Component {
             <div className="col-sm-10 mb-5" style={{ maxWidth: '1000px' }}>
               <Switch>
                 <Route exact path="/" component={Home} />
+                <Route path="/signup" component={Signup} />
+                <Route path="/login" component={Login} />
                 <Route path="/books" component={Books} />
                 <Route path="/book/book-form" component={BookCreate} />
                 <Route path="/book/:id" component={BookDetail} />
