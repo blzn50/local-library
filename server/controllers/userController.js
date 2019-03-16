@@ -190,14 +190,14 @@ exports.user = (req, res, next) => {
 };
 
 exports.forgotPassword = [
-  body('email')
+  body('email', 'Email is required')
     .trim()
     .isEmail()
     .normalizeEmail(),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.send(errors.array());
+      return res.send({ errors: errors.array() });
     }
     const token = crypto.randomBytes(20).toString('hex');
     // console.log('token: ', token);
@@ -214,7 +214,7 @@ exports.forgotPassword = [
     ).exec((err, theuser) => {
       if (err) return next(err);
       if (!theuser) {
-        return res.send({ errors: 'No such email found.' });
+        return res.send({ errors: [{ msg: 'No such email found.' }] });
       }
 
       const mailOptions = {
@@ -222,7 +222,7 @@ exports.forgotPassword = [
         to: `${theuser.email}`,
         subject: 'Link to reset Password',
         text:
-          'You are receiving this because you have requested the reset of the password for your account.\n\n'
+          'You are receiving this because you/someone else have requested the reset of the password for your account.\n\n'
           + 'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n'
           + `http://localhost:3000/reset/${token}\n\n`
           + 'If you did not request this, please ignore this email and your password will remain unchanged.\n',
@@ -233,10 +233,9 @@ exports.forgotPassword = [
           console.error('there was an error: ', err);
         } else {
           console.log('here is the res: ', response);
-          return res.status(200).json('recovery email sent');
+          return res.status(200).send({ message: 'Recovery email sent. Please check your email.' });
         }
       });
-      // res.send('some data for email');
     });
   },
 ];

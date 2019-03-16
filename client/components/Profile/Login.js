@@ -70,6 +70,9 @@ class Login extends Component {
                 icon={visiblePass ? faEye : faEyeSlash}
               />
             </FormGroup>
+            <div className="forgotPassword">
+              <Link to="/forgotpassword">Forgot your password?</Link>
+            </div>
             <Button className="px-4" color="primary">
               Login
             </Button>
