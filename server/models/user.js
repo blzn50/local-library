@@ -20,6 +20,7 @@ const UserSchema = new Schema({
   resetPasswordExpires: Date,
 });
 
+// here query refers to document
 UserSchema.pre('save', function save(next) {
   const user = this;
   if (this.isModified('password') || this.isNew) {
@@ -32,6 +33,19 @@ UserSchema.pre('save', function save(next) {
       });
     });
   }
+});
+
+// here this refers to query
+UserSchema.pre('updateOne', function save(next) {
+  const user = this._update.$set;
+  bcrypt.genSalt(12, (err, salt) => {
+    if (err) return next(err);
+    bcrypt.hash(user.password, salt, (error, hash) => {
+      if (error) return next(error);
+      user.password = hash;
+      next();
+    });
+  });
 });
 
 UserSchema.methods.comparePassword = function compare(password, cb) {

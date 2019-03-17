@@ -224,7 +224,7 @@ exports.forgotPassword = [
         text:
           'You are receiving this because you/someone else have requested the reset of the password for your account.\n\n'
           + 'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n'
-          + `http://localhost:3000/reset/${token}\n\n`
+          + `http://localhost:3000/resetpassword/${token}\n\n`
           + 'If you did not request this, please ignore this email and your password will remain unchanged.\n',
       };
 
@@ -240,4 +240,70 @@ exports.forgotPassword = [
   },
 ];
 
-exports.resetPassword = [];
+exports.resetPassword = (req, res, next) => {
+  const { token } = req.params;
+
+  User.findOne({
+    resetPasswordToken: token,
+    resetPasswordExpires: { $gt: Date.now() },
+  }).exec((error, theuser) => {
+    if (error) throw error;
+    if (theuser === null) {
+      return res.send({ errors: 'link invalid or expired' });
+    }
+    res.status(200).send({
+      email: theuser.email,
+      message: 'link is ok',
+    });
+  });
+};
+
+exports.resetPasswordViaEmail = [
+  body('email')
+    .trim()
+    .isEmail(),
+  body('password', 'Please input password.')
+    .trim()
+    .isLength({ min: 7 })
+    .withMessage('Password must be atleast 7 characters long.'),
+  sanitizeBody('email')
+    .trim()
+    .normalizeEmail(),
+  sanitizeBody('password')
+    .trim()
+    .escape(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.send({ errors: errors.array() });
+    }
+    passport.authenticate('local', (err, usr, info) => {
+      console.log('usr: ', usr);
+      if (err) throw err;
+      if (!usr) {
+        return res.send({ errors: 'No user in database to update' });
+      }
+
+      User.updateOne(
+        { email: req.body.email },
+        {
+          $set: {
+            password: req.body.password,
+            resetPasswordToken: '',
+            resetPasswordExpires: '',
+          },
+        },
+        (er, theuser, other) => {
+          console.log('other: ', other);
+          console.log('er: ', er);
+          console.log('theuser: ', theuser);
+          if (er) {
+            console.log(er);
+            return res.send({ errors: 'Error on updating the password.' });
+          }
+          return res.send({ message: 'Password updated successfully' });
+        },
+      );
+    })(req, res, next);
+  },
+];

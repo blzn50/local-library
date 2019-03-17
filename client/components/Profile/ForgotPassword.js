@@ -52,7 +52,9 @@ class ForgotPassword extends Component {
             {message ? <Alert color="success">{message}</Alert> : ''}
           </ul>
           <FormGroup>
-            <Label for="email">To reset your password, please provide us your email.</Label>
+            <Label for="email">
+              To reset your password, please provide us email you used for signing up.
+            </Label>
             <Input name="email" id="email" type="email" />
           </FormGroup>
           <Button className="px-4" color="primary">

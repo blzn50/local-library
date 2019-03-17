@@ -17,6 +17,7 @@ import GenreDetail from './components/Genre/GenreDetail';
 import Signup from './components/Profile/Signup';
 import Login from './components/Profile/Login';
 import ForgotPassword from './components/Profile/ForgotPassword';
+import ResetPassword from './components/Profile/ResetPassword';
 
 class App extends Component {
   componentDidMount() {}
@@ -35,6 +36,7 @@ class App extends Component {
                 <Route path="/signup" component={Signup} />
                 <Route path="/login" component={Login} />
                 <Route path="/forgotpassword" component={ForgotPassword} />
+                <Route path="/resetpassword/:token" component={ResetPassword} />
                 <Route path="/books" component={Books} />
                 <Route path="/book/book-form" component={BookCreate} />
                 <Route path="/book/:id" component={BookDetail} />

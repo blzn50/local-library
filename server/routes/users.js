@@ -14,4 +14,8 @@ router.get('/detail', authMiddleware, userController.user);
 
 router.post('/forgotpassword', userController.forgotPassword);
 
+router.get('/resetpassword/:token', userController.resetPassword);
+
+router.patch('/resetpasswordviaemail', userController.resetPasswordViaEmail);
+
 module.exports = router;
