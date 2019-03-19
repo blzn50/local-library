@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import {
+  BrowserRouter, Switch, Route, Redirect, withRouter,
+} from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Home from './components/Home';
 import Authors from './components/Author/Authors';
@@ -19,16 +22,44 @@ import Login from './components/Profile/Login';
 import ForgotPassword from './components/Profile/ForgotPassword';
 import ResetPassword from './components/Profile/ResetPassword';
 
+const PrivateRoute = ({ component: Component, session, ...rest }) => (
+  <Route
+    {...rest}
+    render={props => (session ? <Component {...props} /> : <Redirect to="/login" />)}
+  />
+);
+
+PrivateRoute.propTypes = {
+  component: PropTypes.elementType.isRequired,
+  session: PropTypes.bool.isRequired,
+};
+
 class App extends Component {
-  componentDidMount() {}
+  state = {
+    session: false,
+  };
+
+  componentDidMount() {
+    fetch('/users/detail')
+      .then(res => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.id) {
+          this.setState({
+            session: true,
+          });
+        }
+      });
+  }
 
   render() {
+    const { session } = this.state;
     return (
       <div className="container-fluid">
         <BrowserRouter>
           <div className="row">
             <div className="col-sm-2">
-              <Sidebar />
+              <Sidebar session={session} />
             </div>
             <div className="col-sm-10 mb-5" style={{ maxWidth: '1000px' }}>
               <Switch>
@@ -37,18 +68,31 @@ class App extends Component {
                 <Route path="/login" component={Login} />
                 <Route path="/forgotpassword" component={ForgotPassword} />
                 <Route path="/resetpassword/:token" component={ResetPassword} />
-                <Route path="/books" component={Books} />
-                <Route path="/book/book-form" component={BookCreate} />
-                <Route path="/book/:id" component={BookDetail} />
-                <Route path="/authors" component={Authors} />
-                <Route path="/author/author-form" component={AuthorCreate} />
-                <Route path="/author/:id" component={AuthorDetail} />
-                <Route path="/genres" component={Genres} />
-                <Route path="/genre/genre-form" component={GenreCreate} />
-                <Route path="/genre/:id" component={GenreDetail} />
-                <Route path="/bookinstances" component={BookInstances} />
-                <Route path="/bookinstance/bookinstance-form" component={BookInstanceCreate} />
-                <Route path="/bookinstance/:id" component={BookInstanceDetail} />
+                <PrivateRoute path="/books" session={session} component={Books} />
+                {/* <Route path="/books" component={Books} /> */}
+                <PrivateRoute path="/book/book-form" session={session} component={BookCreate} />
+                <PrivateRoute path="/book/:id" session={session} component={BookDetail} />
+                <PrivateRoute path="/authors" session={session} component={Authors} />
+                <PrivateRoute
+                  path="/author/author-form"
+                  session={session}
+                  component={AuthorCreate}
+                />
+                <PrivateRoute path="/author/:id" session={session} component={AuthorDetail} />
+                <PrivateRoute path="/genres" session={session} component={Genres} />
+                <PrivateRoute path="/genre/genre-form" session={session} component={GenreCreate} />
+                <PrivateRoute path="/genre/:id" session={session} component={GenreDetail} />
+                <PrivateRoute path="/bookinstances" session={session} component={BookInstances} />
+                <PrivateRoute
+                  path="/bookinstance/bookinstance-form"
+                  session={session}
+                  component={BookInstanceCreate}
+                />
+                <PrivateRoute
+                  path="/bookinstance/:id"
+                  session={session}
+                  component={BookInstanceDetail}
+                />
               </Switch>
             </div>
           </div>

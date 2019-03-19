@@ -27,7 +27,9 @@ class BookInstanceCreate extends Component {
     }
     fetch('/catalog/bookinstance/create')
       .then(res => res.json())
-      .then(data => this.setState({ bookList: data.bookList }));
+      .then((data) => {
+        this.setState({ bookList: data.bookList });
+      });
   }
 
   handleChange = (e) => {
@@ -93,6 +95,7 @@ class BookInstanceCreate extends Component {
     const {
       bookList, errors, book, imprint, dueBack, status,
     } = this.state;
+
     return (
       <div>
         <h1>Book Instance Form</h1>

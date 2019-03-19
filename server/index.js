@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const compression = require('compression');
 const morgan = require('morgan');
 require('./services/passport');
+const authMiddleware = require('./services/authMiddleware');
 
 const keys = require('../config/keys');
 
@@ -56,7 +57,7 @@ app.use(
 );
 
 app.use('/users', usersRouter);
-app.use('/catalog', catalogRouter);
+app.use('/catalog', authMiddleware, catalogRouter);
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('dist'));

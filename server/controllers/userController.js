@@ -103,10 +103,7 @@ exports.login = [
     .trim()
     .isEmail()
     .withMessage('Please input valid email.'),
-  body('password', 'Password must be specified')
-    .trim()
-    .isLength({ min: 7 })
-    .withMessage('Password must be at least 7 characters long.'),
+  body('password', 'Password must be specified').trim(),
 
   sanitizeBody('email')
     .trim()
@@ -186,6 +183,8 @@ exports.logout = (req, res, next) => {
   res.send({ message: 'You have been logged out!' });
 };
 exports.user = (req, res, next) => {
+  console.log(req.isAuthenticated());
+  console.log(req.user);
   res.send(req.user);
 };
 
