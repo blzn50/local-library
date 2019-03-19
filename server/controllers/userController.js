@@ -89,7 +89,7 @@ exports.signup = [
               if (err) {
                 return next(err);
               }
-              return res.json({ message: 'User created successfully!', url: '/detail' });
+              return res.json({ message: 'User created successfully!', url: '/' });
             });
           });
         }
@@ -135,7 +135,7 @@ exports.login = [
               if (err) {
                 return next(err);
               }
-              return res.send({ url: '/detail' });
+              return res.send({ url: '/' });
             });
             // res.send('user logged in');
             // done(null, user);
@@ -292,12 +292,10 @@ exports.resetPasswordViaEmail = [
             resetPasswordExpires: '',
           },
         },
-        (er, theuser, other) => {
-          console.log('other: ', other);
+        (er, theuser) => {
           console.log('er: ', er);
           console.log('theuser: ', theuser);
           if (er) {
-            console.log(er);
             return res.send({ errors: 'Error on updating the password.' });
           }
           return res.send({ message: 'Password updated successfully' });

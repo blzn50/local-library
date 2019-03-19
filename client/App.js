@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import {
-  BrowserRouter, Switch, Route, Redirect, withRouter,
+  BrowserRouter, Switch, Route, Redirect, Link,
 } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Home from './components/Home';
@@ -25,7 +25,8 @@ import ResetPassword from './components/Profile/ResetPassword';
 const PrivateRoute = ({ component: Component, session, ...rest }) => (
   <Route
     {...rest}
-    render={props => (session ? <Component {...props} /> : <Redirect to="/login" />)}
+    render={props => (session ? <Component {...props} /> : <Redirect to={{ pathname: '/login' }} />)
+    }
   />
 );
 
@@ -37,13 +38,15 @@ PrivateRoute.propTypes = {
 class App extends Component {
   state = {
     session: false,
+    fakeData: '',
   };
 
   componentDidMount() {
     fetch('/users/detail')
       .then(res => res.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
+        this.setState({ fakeData: 'dummy data' });
         if (data.id) {
           this.setState({
             session: true,
@@ -52,16 +55,45 @@ class App extends Component {
       });
   }
 
+  handlelogout = () => {
+    fetch('/users/logout')
+      .then(res => res.json())
+      .then((data) => {
+        this.setState({
+          session: false,
+        });
+      });
+  };
+
   render() {
-    const { session } = this.state;
+    const { session, fakeData } = this.state;
     return (
       <div className="container-fluid">
         <BrowserRouter>
           <div className="row">
-            <div className="col-sm-2">
+            <div className="col-sm-3">
+              <li style={{ listStyleType: 'none' }}>
+                <Link to="/">Home</Link>
+              </li>
               <Sidebar session={session} />
+              {/* eslint-disable-next-line no-nested-ternary */}
+              {!session ? (
+                fakeData !== '' ? (
+                  <Fragment>
+                    <Link to="/login">Login</Link>
+                    <br />
+                    <Link to="/signup">Signup</Link>
+                  </Fragment>
+                ) : (
+                  ''
+                )
+              ) : (
+                <button type="button" onClick={this.handlelogout} className="btn btn-danger">
+                  Logout
+                </button>
+              )}
             </div>
-            <div className="col-sm-10 mb-5" style={{ maxWidth: '1000px' }}>
+            <div className="col-sm-9 mb-5" style={{ maxWidth: '1000px' }}>
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route path="/signup" component={Signup} />

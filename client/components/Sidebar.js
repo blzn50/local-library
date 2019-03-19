@@ -10,9 +10,6 @@ const Sidebar = ({ session }) => {
       <aside>
         <ul className="sidebar-nav">
           <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
             <Link to="/books">All Books</Link>
           </li>
           <li>
