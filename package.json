@@ -36,7 +36,7 @@
     "express-validator": "^6.0.0",
     "helmet": "^3.15.1",
     "moment": "^2.24.0",
-    "mongoose": "^5.4.11",
+    "mongoose": "^5.12.3",
     "morgan": "^1.9.1",
     "node-sass": "^4.11.0",
     "nodemailer": "^5.1.1",
@@ -47,7 +47,7 @@
     "react-dom": "^16.8.1",
     "react-router-dom": "^4.3.1",
     "reactstrap": "^7.1.0",
-    "snyk": "^1.189.0"
+    "snyk": "^1.230.7"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
